@@ -1,0 +1,101 @@
+import hashlib
+import random
+from anytree import Node, RenderTree
+
+# Clase para representar los nodos, contiene el hash, y sus hijos izquierdo y derecho
+class Nodo:
+    def __init__(self, hash):
+        self.hash = hash
+        self.izquierdo = None
+        self.derecho = None
+         
+def calcular_hash(texto):             #Función para calcular el hash de los nodos, sin tener que repetir todo el código cada vez.
+    return hashlib.sha256(texto.encode()).hexdigest()
+#Esta función permite generar transacciones aleatorias, todas son de pago, por ejemplo: "Ana pago 180"
+
+def generar_transacciones(N, nombres):
+    transacciones= []  # Lista donde se van a guardar las transacciones
+    nodos = []
+    for i in range(N):
+        transaccion = f"{random.choice(nombres)} pago {random.randint(1,1000)}"# Se genera una transacción escogiendo un nombre aleatorio y un monto aleatorio entre 1 y 1000
+        transacciones.append(transaccion)
+        print(transaccion)
+        hash_transaccion= calcular_hash(transaccion) # Se genera el hash de la transacción
+        nodo = Nodo(hash_transaccion)                # Se crea un nodo con el hash de la transacción
+        nodos.append(nodo)            #Se agrega a una lista de nodos, donde inicialmente se van a tener solo los nodos de las transacciones
+    return nodos, transacciones
+
+#Esta función es para construir los niveles del arbol     
+def construir_niveles(nodos):
+    siguiente_nivel = []
+    for i in range(0,len(nodos),2):     # Se recorre la lista de nodos de dos en dos
+
+        if i + 1 < len(nodos):      #Se verifica que exista un nodo vecino, para saber cuando se tiene un numero impar de nodos en el nivel
+            nodo_actual = nodos[i]   # Nodo actual en el ciclo
+            nodo_vecino = nodos[i + 1]  # Nodo que está a su lado
+            hash_padre = calcular_hash(nodo_actual.hash +  nodo_vecino.hash)  # Se calcula el hash que forman los dos nodos continuos, quien será su padre
+            nodo_padre = Nodo(hash_padre)    # Se crea el nodo padre  y se añade a la lista del nivel siguiente.
+            nodo_padre.izquierdo = nodo_actual
+            nodo_padre.derecho = nodo_vecino
+            siguiente_nivel.append(nodo_padre)
+        else:
+            nodo_actual = nodos[i]       # En caso de que el último nodo no tenga otro a su lado, el número de nodos es impar
+            nodo_vecino = Nodo(nodo_actual.hash) # El nodo vecino de este sería el mismo
+            nodo_padre = Nodo(calcular_hash(nodo_actual.hash +  nodo_vecino.hash)) # Se calcula su padre con el hash del nodo con el mismo
+            nodo_padre.izquierdo = nodo_actual  
+            nodo_padre.dereho = nodo_vecino
+            siguiente_nivel.append(nodo_padre)
+    return siguiente_nivel
+
+def construir_arbol(nodos_nivel_actual):          # Se construye el arbol con la función de construir nivel hasta llegar a la raiz y se retorna
+    while len(nodos_nivel_actual) > 1:
+        nodos_nivel_actual = construir_niveles(nodos_nivel_actual)
+    return nodos_nivel_actual[0]
+
+def convertir_arbol_a_anytree(nodo, padre=None):     # Se convierte el árbol en una estructura de anytree para mostrarlo en la terminal, empieza con None porque la raiz no tiene padre
+    nodo_anytree = Node(nodo.hash[:8], parent=padre)     # Se convierte a un nodo de AnyTree y solo se muestran los primeros 8 caracteres de cada nodo
+    if nodo.izquierdo:    # Si tiene hijo izquierdo también se convierte siendo el padre el nodo_anytree y ya no sería None
+        convertir_arbol_a_anytree(nodo.izquierdo, nodo_anytree)     
+    if nodo.derecho:        # Si tiene hijo derecho también se convierte
+        convertir_arbol_a_anytree(nodo.derecho, nodo_anytree)
+    return nodo_anytree 
+
+def mostrar_arbol(raiz):
+    arbol = convertir_arbol_a_anytree(raiz)
+    for pre, __, nodo in RenderTree(arbol):
+            print(f"{pre}{nodo.name}")
+
+N = 5
+nombres = ["Ana", "Juan", "Pedro", "Maria", "Carlos"]
+def experimento_uno():
+
+    nodos, transacciones = generar_transacciones(N, nombres)
+    raiz_original = construir_arbol(nodos)
+
+    print("\n Árbol original\n")
+    mostrar_arbol(raiz_original)
+
+    print("\nRaíz original:")
+    print(raiz_original.hash)
+
+    print("\nModificar un bloque:\n")
+    print("\n Transacción modificada:")
+    transaccion_modificada = "\n Silvana pago 200000\n" # Como no está en la lista de nombres ni en el límite de montos no será igual a otra
+
+    transacciones[0] = transaccion_modificada
+    nodos[0] = Nodo(calcular_hash(transacciones[0]))
+
+    raiz_modificada = construir_arbol(nodos)
+
+    print("\nÁrbol modificado")
+    mostrar_arbol(raiz_modificada)
+
+    print("\nRaíz modificada:")
+    print(raiz_modificada.hash)
+    
+    if raiz_original != raiz_modificada:
+        print("\nLa raíz cambió")
+
+def experimento_dos():
+    
+
