@@ -18,7 +18,7 @@ def generar_transacciones(N, nombres):         #Esta función permite generar tr
         transaccion = f"{random.choice(nombres)} pago {random.randint(1,1000)}"    # Se genera una transacción escogiendo un nombre aleatorio de la lista y un monto aleatorio entre 1 y 1000
         transacciones.append(transaccion)                                   
         print(i+1, transaccion)                         # Las transacciones se muestran mientras se crean.
-        hash_transaccion= calcular_hash(transaccion)    # Se genera el hash de la transacción                
+        hash_transaccion= calcular_hash(transaccion)                  
         nodos.append(Nodo(hash_transaccion))            #Se crea un nodo con el hash de la transacción y se agrega a la lista de nodos, donde inicialmente se van a tener solo los nodos de las transacciones.
     return nodos, transacciones                         # Se retorna la lista de los nodos y de las transacciones
                                      
@@ -54,7 +54,7 @@ def convertir_arbol_a_anytree(nodo, padre=None):           # Esta función recib
         convertir_arbol_a_anytree(nodo.izquierdo, nodo_a_mostrar)     
     if nodo.derecho:                                     # Si tiene hijo derecho también se convierte
         convertir_arbol_a_anytree(nodo.derecho, nodo_a_mostrar)
-    return nodo_a_mostrar     # Se retorna el nodo convertido a AnyTree
+    return nodo_a_mostrar                                # Se retorna el nodo convertido a AnyTree
 
 def mostrar_arbol(raiz):                          # Función para mostrar el árbol en la terminal y recibe la raiz del árbol.
     arbol = convertir_arbol_a_anytree(raiz)       # Se convierte el árbol a un AnyTree para que RenderTree pueda mostrarlo, se guarda su raiz.
@@ -111,4 +111,6 @@ print(f"\n Raíz del arbol:\n{raiz.hash} ")
 print("\nEXPERIMENTO UNO: MODIFICAR UN BLOQUE")                 
 experimento_uno(nodos.copy(), transacciones.copy())             # Se corre el experimento uno y dos con una copia de los nodos y las transacciones para no modificar directamente los originales
 print("\nEXPERIMENTO DOS: PRUEBA DE INCLUSIÓN DEL BLOQUE 3")
+for i in range(len(transacciones)):
+    print(i+1,transacciones[i])   # Se muestran las transacciones originales para demostrar el segundo experimento
 experimento_dos(nodos.copy(), transacciones.copy())
