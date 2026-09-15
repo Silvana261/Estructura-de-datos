@@ -28,9 +28,8 @@ def construir_niveles(nodos):               #Esta función es para construir los
 
         if i + 1 < len(nodos):              #Se verifica que exista un nodo vecino, para saber cuando se tiene un numero impar de nodos en el nivel
             nodo_actual = nodos[i]          # Nodo actual en el ciclo
-            nodo_vecino = nodos[i + 1]      # Nodo que está a su lado
-            hash_padre = calcular_hash(nodo_actual.hash +  nodo_vecino.hash)    # Se calcula el hash que forman los dos nodos, quien será su padre
-            nodo_padre = Nodo(hash_padre)                                       # Se crea el nodo padre  y se añade a la lista del nivel siguiente.
+            nodo_vecino = nodos[i + 1]      # Nodo que está a su lado  
+            nodo_padre = Nodo(calcular_hash(nodo_actual.hash +  nodo_vecino.hash)  )           # Se crea y calcula el hash que forman los dos nodos, quien será su padre y se añade a la lista del nivel siguiente.
             nodo_padre.izquierdo = nodo_actual      # Se asignan los hijos del nodo, el de la izquierda será el nodo actual
             nodo_padre.derecho = nodo_vecino        # Su hijo a la derecha será el vecino del nodo actual
             siguiente_nivel.append(nodo_padre)
