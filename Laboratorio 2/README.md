@@ -36,6 +36,6 @@ Se solicita una posible transacción para el bloque 3 y, mediante los hashes nec
 Se utilizó Inteligencia Artificial como herramienta de apoyo durante el desarrollo del laboratorio para encontrar librerías y para:
 
 * Comprender y descubrir el uso de `random.choice()` para seleccionar aleatoriamente un nombre de una lista.
-* Comprender la implementación de la librería **AnyTree** y el uso de `RenderTree` para mostrar el Árbol de Merkle gráficamente en la terminal.
+* Comprender e implementar la librería **AnyTree** y el uso de `RenderTree` para mostrar el Árbol de Merkle gráficamente en la terminal.
 * Comprender cómo utilizar funciones recursivas para recorrer y convertir los nodos del árbol a la estructura de AnyTree y RenderTree.
-* Identificar y solucionar errores durante el desarrollo del programa, utilizando la IA como apoyo para localizar de manera más rápida posibles problemas en el código y comprender cómo corregirlos.
+* Identificar y solucionar errores durante el desarrollo del programa, utilicé la IA para identificar porqué en el experimento dos no podía reconstruir la raiz correctamente, y me ayudó a identificar que era porque estaba calculando mal a h4.
