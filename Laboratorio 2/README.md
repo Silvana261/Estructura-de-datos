@@ -2,7 +2,7 @@
 
 **Árbol de Merkle** utilizando hashes SHA-256.
 
-El programa permite:
+``ArbolDeMerkle.py`` permite:
 
 * **Generar transacciones aleatorias:** se generan `N` transacciones seleccionando aleatoriamente un nombre de una lista y una cantidad entre 1 y 1000. Todas tienen el formato `"(nombre) pago (cantidad)"`, por ejemplo: `"Ana pago 180"`. A cada transacción se le calcula su hash SHA-256, que representa las hojas iniciales del árbol.
 * **Construir el árbol por niveles:** se agrupan los nodos de dos en dos y se calcula el hash de la concatenación de sus hashes para crear el nodo padre. Este proceso se repite hasta obtener un único nodo, que corresponde a la raíz.
