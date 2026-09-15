@@ -1,14 +1,16 @@
-### Laboratorio 2
+## Laboratorio 2
 
 **Árbol de Merkle** utilizando hashes SHA-256.
 
 El programa permite:
 
-* Generar transacciones aleatorias y calcular su hash.
-* Construir el árbol por niveles a través de la clase nodo.
-* Manejar cantidades impares de nodos duplicando el último nodo.
-* Mostrar gráficamente el árbol en la terminal utilizando `AnyTree`.
-* Obtener y mostrar la raíz del árbol.
+* **Generar transacciones aleatorias:** se generan `N` transacciones seleccionando aleatoriamente un nombre de una lista y una cantidad entre 1 y 1000. Todas tienen el formato `"(nombre) pago (cantidad)"`, por ejemplo: `"Ana pago 180"`. A cada transacción se le calcula su hash SHA-256, que representa las hojas iniciales del árbol.
+* **Construir el árbol por niveles:** se agrupan los nodos de dos en dos y se calcula el hash de la concatenación de sus hashes para crear el nodo padre. Este proceso se repite hasta obtener un único nodo, que corresponde a la raíz.
+* **Manejar cantidades impares de nodos:** cuando un nivel tiene una cantidad impar de nodos, se duplica el último nodo para poder formar su nodo padre.
+* **Representar los nodos:** cada nodo almacena su hash y tiene referencias a su hijo izquierdo y derecho mediante la clase `Nodo`.
+* **Mostrar el árbol en la terminal:** se convierte la estructura del árbol a `AnyTree` y se utiliza `RenderTree` para mostrar visualmente las relaciones entre padres e hijos. Para facilitar la lectura, se muestran únicamente los primeros 8 caracteres de cada hash.
+* **Obtener la raíz:** después de construir todos los niveles, se obtiene el único nodo restante como raíz y se muestra su hash completo.
+
 <img width="1136" height="591" alt="image" src="https://github.com/user-attachments/assets/32b3e25c-a189-446d-a657-ffd772a33ac9" />
 
 
@@ -35,5 +37,5 @@ Se utilizó Inteligencia Artificial como herramienta de apoyo durante el desarro
 
 * Comprender y descubrir el uso de `random.choice()` para seleccionar aleatoriamente un nombre de una lista.
 * Comprender la implementación de la librería **AnyTree** y el uso de `RenderTree` para mostrar el Árbol de Merkle gráficamente en la terminal.
-* Comprender cómo utilizar funciones recursivas para recorrer y convertir los nodos del árbol a la estructura de **AnyTree y RenderTree **.
+* Comprender cómo utilizar funciones recursivas para recorrer y convertir los nodos del árbol a la estructura de AnyTree y RenderTree.
 * Identificar y solucionar errores durante el desarrollo del programa, utilizando la IA como apoyo para localizar de manera más rápida posibles problemas en el código y comprender cómo corregirlos.
