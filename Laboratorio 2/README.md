@@ -37,5 +37,6 @@ Se utilizó Inteligencia Artificial como herramienta de apoyo durante el desarro
 
 * Comprender y descubrir el uso de `random.choice()` para seleccionar aleatoriamente un nombre de una lista.
 * Comprender e implementar la librería **AnyTree** y el uso de `RenderTree` para mostrar el Árbol de Merkle gráficamente en la terminal.
+  Se usó en las funciones convertir_arbol_a_anytree y mostra_arbol
 * Comprender cómo utilizar funciones recursivas para recorrer y convertir los nodos del árbol a la estructura de AnyTree y RenderTree.
 * Identificar y solucionar errores durante el desarrollo del programa, utilicé la IA para identificar porqué en el experimento dos no podía reconstruir la raiz correctamente, y me ayudó a identificar que era porque estaba calculando mal a h4.
