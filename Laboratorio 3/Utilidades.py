@@ -17,11 +17,11 @@ NOMBRES = ["Ana", "Carlos", "María", "Juan", "Laura", "Pedro", "Sofía", "Danie
 
 
 # 1. DATOS
-def generar_estudiantes(n, orden="aleatorio"):      # n indica cuántos estudiantes se quieren generar.  Y el orden significa si los IDs van a estar aleatorios u ordenados
+def generar_estudiantes(n, orden="aleatorio"):       # n indica cuántos estudiantes se quieren generar.  Y el orden significa si los IDs van a estar aleatorios u ordenados
     
-    ids = random.sample(range(1000, 1000 + n), n)   # Genera n IDs únicos desde entre 1000 y 1000 + n -1. random.sample los genera sin repetir aleatoriamente
-    if orden == "ordenado":       # Comprueba si se pidió que los estudiantes estén ordenados.
-        ids.sort()                # Ordena los IDs de menor a mayor.
+    ids = random.sample(range(1000, 1000 + n), n)    # Genera n IDs únicos desde entre 1000 y 1000 + n -1. random.sample los genera sin repetir aleatoriamente
+    if orden == "ordenado":                          # Comprueba si se pidió que los estudiantes estén ordenados.
+        ids.sort()                                   # Ordena los IDs de menor a mayor.
     estudiantes = []
     for i in ids:
         estudiantes.append(Estudiante(i, random.choice(NOMBRES), random.randint(18, 50), round(random.uniform(0.0, 10), 2) ))
@@ -56,7 +56,7 @@ def medir(funcion, *args):     # función para medir cuánto tarda otra función
 
 # 3. FUNCIONES PARA FACILITAR LA CONSTRUCCIÓN EN TODAS LAS ESTRUCTURAS
 
-def insertar_todos(estructura, estudiantes):    # Inserta todos los estudiantes en la estructura indicada
+def insertar_en_todas_las_estructuras(estructura, estudiantes):    # Inserta todos los estudiantes en la estructura indicada
     
     if estructura == "lista":     # Si la estructura es una lista
         lista = []
@@ -102,7 +102,7 @@ def buscar_para_todas_las_estructuras(estructura, objeto, ids):     # Función p
             objeto.buscarBMas(i)
 
 
-def listar(estructura, objeto):     # Función para obtener todos los elementos ordenados, pero solo en memoria
+def listar_en_todas_las_estructuras(estructura, objeto):     # Función para obtener todos los elementos ordenados, pero solo en memoria
 
     if estructura == "lista":   # Si es una lista
         return Lista.listar_en_orden(objeto)    # Si es una lista
@@ -119,9 +119,9 @@ if __name__ == "__main__":
         est = generar_estudiantes(1000, orden)
         ids = generar_busquedas(est, 100)
         for estr in ("lista", "abb", "bmas"):
-            t_ins, obj = medir(insertar_todos, estr, est)
+            t_ins, obj = medir(insertar_en_todas_las_estructuras, estr, est)
             t_bus, _ = medir(buscar_para_todas_las_estructuras, estr, obj, ids)
-            t_lis, res = medir(listar, estr, obj)
+            t_lis, res = medir(listar_en_todas_las_estructuras, estr, obj)
             ordenado_ok = all(res[k].id < res[k + 1].id for k in range(len(res) - 1))
             h = obj.altura() if estr in ("abb", "bmas") else "-"
             print(f"{orden:9} {estr:5} ins={t_ins/1e6:8.2f}ms bus={t_bus/1e6:8.2f}ms "
