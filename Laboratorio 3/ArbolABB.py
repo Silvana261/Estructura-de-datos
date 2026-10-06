@@ -86,25 +86,31 @@ class ABB:                             # Esta clase representa el árbol ABB y d
                     siguiente.append(nodo.derecha)
             nivel = siguiente         # Una vez que todos los hijos del nivel actual están en siguiente, se actualiza como nivel actual
         return altura
-    def buscarRango(self, a, b):
-        resultado = []
-        pila = []
-        nodo = self.raiz
-        while nodo is not None or len(pila) > 0:
-            while nodo is not None:
-                pila.append(nodo)
-                if nodo.estudiante.id > a:       # Solo se baja a la izquierda si ahí puede haber IDs >= a
-                    nodo = nodo.izquierda
-                else:
-                    nodo = None
-            nodo = pila.pop()
-            id_actual = nodo.estudiante.id
-            if id_actual > b:                    # En recorrido en orden, todo lo que sigue es mayor que b
-                break
-            if id_actual >= a:
-                resultado.append(nodo.estudiante)
-            if id_actual < b:                    # Solo se baja a la derecha si ahí puede haber IDs <= b
-                nodo = nodo.derecha
-            else:
-                nodo = None
-        return resultado
+    
+    def buscar_rango(self, inicio, fin):
+        resultados = []       # Lista donde se guardarán los estudiantes encontrados
+        pila = []             # Pila para recorrer el árbol sin recursión
+
+        if self.raiz is not None:
+            pila.append(self.raiz)   # Empezamos desde la raíz
+
+        while pila:
+            nodo = pila.pop()        # Sacamos un nodo de la pila
+
+            # Si el ID del nodo es mayor que el inicio,
+            # puede haber elementos del rango a la izquierda
+            if nodo.estudiante.id > inicio:
+                if nodo.izquierda is not None:
+                    pila.append(nodo.izquierda)
+
+            # Si el ID está dentro del rango, agregamos el estudiante
+            if inicio <= nodo.estudiante.id <= fin:
+                resultados.append(nodo.estudiante)
+
+            # Si el ID del nodo es menor que el final,
+            # puede haber elementos del rango a la derecha
+            if nodo.estudiante.id < fin:
+                if nodo.derecha is not None:
+                    pila.append(nodo.derecha)
+
+        return resultados

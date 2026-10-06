@@ -134,3 +134,29 @@ class ArbolBMas:
             nodo = nodo.hijos[0]      # Debido a que todas las hojas están al mismo nivel por ser un B+, se toma el primer hijo solamente, no importa el hijo, siempre será la misma altura.
             altura += 1               # Por cada nivel que se baje se suma uno a la altura
         return altura
+    
+    def buscar_rango(self, id_min, id_max):
+        resultado = []        # Lista donde se almacenaran los estudiantes
+        nodo = self.raiz      # El recorrido empieza desde la raiz del árbol
+
+        while not nodo.hoja:     # Primero bajamos hasta la hoja donde podría estar id_min
+            i = 0                  
+
+            while i < len(nodo.claves) and id_min >= nodo.claves[i]:    # En los nodos internos se recorren las claves hasta encontrar la rama donde están los valores mayores a id_min
+                i += 1                # i es el índice que apunta a los hijos en donde está metido id min en sus intervalos de claves
+
+            nodo = nodo.hijos[i]      # Se va bajando, hasta que nodo contenga la hoja con los estudiantess con los id mayores o iguales a id_min
+
+        while nodo:      # Ya estamos en la hoja donde puede comenzar el rango
+            for i in range(len(nodo.claves)):    # Se revisan todas las claves de cada hoja
+                id_actual = nodo.claves[i]       
+
+                if id_actual > id_max:    # Si el ID ya supera el límite superior, terminamos
+                    return resultado
+
+                if id_actual >= id_min:    # Si está dentro del rango, agregamos el estudiante
+                    resultado.append(nodo.hijos[i])
+
+            nodo = nodo.siguiente   # Pasamos a la siguiente hoja, ya que las hojas están enlazadas
+
+        return resultado

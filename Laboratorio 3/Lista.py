@@ -15,11 +15,11 @@ def listar_en_orden(estudiantes):                       # Recibe la lista de est
     estudiantes_ordenados.sort(key=lambda estudiante: estudiante.id)  # Se ordena por ID usando sort()
     return estudiantes_ordenados                          # Retorna la lista ya ordenada
 
-def buscar_rango(estudiantes, inicio, fin):   # Función para buscar por rangos en una vista
+def buscar_rango(estudiantes, id_min, id_max):   # Función para buscar por rangos en una vista, recibe el menor id y el mayor id que definen el rango
     resultados = []                           #  Inicializa una lista donde se guardaran los estudiantes buscados
 
     for estudiante in estudiantes:            # Recorre cada estudiante, y si el Id está en el rango se inserta en resultado
-        if inicio <= estudiante.id <= fin:
+        if id_min <= estudiante.id <= id_max:
             resultados.append(estudiante)
 
     return resultados
