@@ -86,3 +86,25 @@ class ABB:                             # Esta clase representa el árbol ABB y d
                     siguiente.append(nodo.derecha)
             nivel = siguiente         # Una vez que todos los hijos del nivel actual están en siguiente, se actualiza como nivel actual
         return altura
+    def buscarRango(self, a, b):
+        resultado = []
+        pila = []
+        nodo = self.raiz
+        while nodo is not None or len(pila) > 0:
+            while nodo is not None:
+                pila.append(nodo)
+                if nodo.estudiante.id > a:       # Solo se baja a la izquierda si ahí puede haber IDs >= a
+                    nodo = nodo.izquierda
+                else:
+                    nodo = None
+            nodo = pila.pop()
+            id_actual = nodo.estudiante.id
+            if id_actual > b:                    # En recorrido en orden, todo lo que sigue es mayor que b
+                break
+            if id_actual >= a:
+                resultado.append(nodo.estudiante)
+            if id_actual < b:                    # Solo se baja a la derecha si ahí puede haber IDs <= b
+                nodo = nodo.derecha
+            else:
+                nodo = None
+        return resultado
