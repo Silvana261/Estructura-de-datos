@@ -41,7 +41,7 @@ def altura_de(estr, objeto):   # Función para calcular la altura del árbol que
     return objeto.altura() if estr in ("abb", "bmas") else ""     # se retorna la altura del árbol ya sea ABB o B+ llamando sus métodos
 
 
-# E1: INSERCIÓN
+#  ------------------ E1: INSERCIÓN ------------------
 def experimento_1_insercion(w):       # 'w' se utiliza para escribir los resultados en un archivo CSV.
     """Tiempo de insertar N estudiantes, con IDs aleatorios y en orden creciente."""
 
@@ -80,10 +80,10 @@ def experimento_1_insercion(w):       # 'w' se utiliza para escribir los resulta
             print(f"[E1] orden={orden:9} N={n:6} listo ({REPETICIONES} repeticiones)")
 
 
-# ------------------------------------------------------------ E2: BÚSQUEDA POR ID
+# ----------- E2: BÚSQUEDA POR ID -------------
 def experimento_2_busqueda(w):
-    """Tiempo de M búsquedas por ID (todas de IDs existentes) sobre la estructura ya construida."""
-
+    """Tiempo de M búsquedas a IDs aleatorios existentes sobre la estructura ya construida."""
+    # Se construyen funciones auxiliares para construir cada estructura y para llamar el respectivo método de búsqueda
     def construir_lista(estudiantes):
         lista = []
         for e in estudiantes:
@@ -102,7 +102,7 @@ def experimento_2_busqueda(w):
             arbol.insertarBMas(e)
         return arbol
 
-    def buscar_lista(lista, ids):
+    def buscar_lista(lista, ids):    # Funciones auxiliares para llamar cada método de búsqueda, pasandole a cada una la estructura y los ids a buscar
         for i in ids:
             Lista.buscar_en_lista(lista, i)
 
@@ -113,35 +113,36 @@ def experimento_2_busqueda(w):
     def buscar_bmas(arbol, ids):
         for i in ids:
             arbol.buscarBMas(i)
+    # Diccionario que relaciona cada estructura con la función que permite construirla y la función que permite realizar las búsquedas
+    estructuras = {"lista": (construir_lista, buscar_lista), "abb": (construir_abb, buscar_abb), "bmas": (construir_bmas, buscar_bmas)}
 
-    estructuras = {"lista": (construir_lista, buscar_lista),
-                   "abb": (construir_abb, buscar_abb),
-                   "bmas": (construir_bmas, buscar_bmas)}
-
-    for orden in ORDENES:
-        for n in TAMANOS:
-            for rep in range(1, REPETICIONES + 1):
-                estudiantes = generar_estudiantes(n, orden)
-                ids = generar_busquedas(estudiantes, NUM_BUSQUEDAS_INDIVDUALES)     # mismas búsquedas para las 3 estructuras
+    for orden in ORDENES:     # Se recorren los diferentes órdenes en los que se pueden generar los estudiantes
+        for n in TAMANOS:     # Se repite el experimento con los diferentes tamaños de estudiantes
+            for rep in range(1, REPETICIONES + 1):           # Se repite 20 veces cada experimento con los mismos n estudiantes y el mismo orden
+                estudiantes = generar_estudiantes(n, orden)  # Se generan los n estudiantes utilizando el orden actual
+                ids_a_buscar = generar_busquedas(estudiantes, NUM_BUSQUEDAS_INDIVDUALES)     # Se generan los M = 1000 ids a buscar con la función generar busquedas dentro de los estudiantes generados
 
                 for estr, (construir, buscar) in estructuras.items():
-                    objeto = construir(estudiantes)         # La construcción queda FUERA del cronómetro
+                    objeto = construir(estudiantes)                      # Se construye cada estructura con los mismos estudiantes y el tiempo que tarda en construirse no se incluye en el experimento
 
-                    # Solo se cronometran las M búsquedas
-                    tiempo, _ = medir(buscar, objeto, ids)
+                    tiempo, _ = medir(buscar, objeto, ids_a_buscar)      # Se mide el tiempo de realizar las M búsquedas con cada objeto
+                                                                         # como no se necesita los estudiantes que retornan las funciones, se guardan en _
+                                                                         
+                    # Se guardan en el archivo del eperimento 2, donde cada columna describe la estructura, orden, número de estudiantes, número de búsquedas, repeticiones, tiempo del exp, y la altura del árbol                                                  
                     w.writerow(["E2", estr, orden, n, NUM_BUSQUEDAS_INDIVDUALES, rep, tiempo, altura_de(estr, objeto)])
 
-            print(f"[E2] orden={orden:9} N={n:6} listo ({REPETICIONES} repeticiones)")
+            print(f"[E2] orden={orden:9} N={n:6} listo ({REPETICIONES} repeticiones)")   # Se va mostrando el progreso 
 
 
-# ------------------------------------------------------------ E3: LISTADO ASCENDENTE
+# ------------ E3: LISTADO ASCENDENTE   -------------
 def experimento_3_listado(w):
     """Tiempo de producir en memoria la secuencia ordenada de los N estudiantes (sin imprimir)."""
 
+    # Se construyen funciones auxiliares para construir cada estructura e insertar los estudiantes llamando sus métodos
     def construir_lista(estudiantes):
         lista = []
         for e in estudiantes:
-            Lista.insertar_en_lista(lista, e)
+            Lista.insertar_en_lista(lista, e) 
         return lista
 
     def construir_abb(estudiantes):
@@ -156,6 +157,7 @@ def experimento_3_listado(w):
             arbol.insertarBMas(e)
         return arbol
 
+    # Se hacen funciones auxiliares para llamar cada método que lista los estudiantes en orden de cada estructura
     def listar_lista(lista):
         return Lista.listar_en_orden(lista)     # copia y ordena con sort
 
@@ -165,22 +167,23 @@ def experimento_3_listado(w):
     def listar_bmas(arbol):
         return arbol.listarTodos()              # recorrido de las hojas enlazadas
 
-    estructuras = {"lista": (construir_lista, listar_lista),
-                   "abb": (construir_abb, listar_abb),
-                   "bmas": (construir_bmas, listar_bmas)}
+    # Se hace un diccionario que relaciona cada estructura con su función para construirla y listar los elementos
+    estructuras = {"lista": (construir_lista, listar_lista), "abb": (construir_abb, listar_abb),  "bmas": (construir_bmas, listar_bmas)}
 
-    for orden in ORDENES:
-        for n in TAMANOS:
-            for rep in range(1, REPETICIONES + 1):
-                estudiantes = generar_estudiantes(n, orden)
+    for orden in ORDENES:    # Se recorren los diferentes órdenes en los que se pueden generar los estudiantes
+        for n in TAMANOS:    # Se repite el experimento con los diferentes tamaños de estudiantes
+            for rep in range(1, REPETICIONES + 1):             # Se repite 20 veces cada experimento con los mismos n estudiantes y el mismo orden
+                estudiantes = generar_estudiantes(n, orden)    # Se generan los estudiantes en el orden correspondiente
 
-                for estr, (construir, listar) in estructuras.items():
-                    objeto = construir(estudiantes)         # fuera del cronómetro
+                for estr, (construir, listar) in estructuras.items():     # Probamos el listado en cada una de las estructuras recorriendo el diccionario 
+                    objeto = construir(estudiantes)         # Construimos cada estructura con los mismo estudiantes, se hace fuera del cronómetro porque no hace parte del experimento
 
-                    tiempo, _ = medir(listar, objeto)
+                    tiempo, _ = medir(listar, objeto)       # Se mide el tiempo en el que cada estructura lista los n estudiantes, pasandole la funcion y el parámetro que es el objeto                    
+                    
+                    # Se guarda el resultado en el archivo del experimento 3, donde las columnas son la estructura, el orden de los datos, número de estudiantes, "" porque no hay búsquedas en este experimento, las repeticiones, tiempo y altura de la estructura
                     w.writerow(["E3", estr, orden, n, "", rep, tiempo, altura_de(estr, objeto)])
 
-            print(f"[E3] orden={orden:9} N={n:6} listo ({REPETICIONES} repeticiones)")
+            print(f"[E3] orden={orden:9} N={n:6} listo ({REPETICIONES} repeticiones)")   # Se muestra el progreso cada ciclo completado
 
 
 # ------------------------------------------------------------ E5: BÚSQUEDA POR RANGO
