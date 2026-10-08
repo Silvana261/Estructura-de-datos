@@ -10,11 +10,14 @@ from GenerarDatos import generar_estudiantes, generar_busquedas, generar_rangos
 
 # Parámetros
 NUM_BUSQUEDAS_INDIVDUALES = 1000        # número de búsquedas por ID en cada medición  (M)
+
 NUMERO_DE_RANGOS = 1000                    # número de rangos por medición en la búqueda por rangos (Q)
+
 TAMANO_RANGO = 100         # Número de estudiantes que devuelve cada búsqueda por rango (K)
 
 TAMANOS = [10, 25, 50, 100, 500, 1000, 5000, 10000, 20000]   # número de estudiantes con los que corre el experimento
-REPETICIONES = 13                                           # Número de repeticiones por experimento
+
+REPETICIONES = 15                                             # Número de repeticiones por experimento
 
 ORDENES = ["aleatorio", "ordenado"]   # El orden en el que pueden estar insertados los daatos
 

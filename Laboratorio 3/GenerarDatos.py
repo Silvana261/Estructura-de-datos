@@ -42,14 +42,3 @@ def generar_rangos(n, q, k):     # Función para generar los rangos de búsqueda
         a = random.randint(ID_INICIO, ID_INICIO + n - k)  # Se escoge el id de inicio de forma aleatoria entre los posibles, restandole k para que no se salga del rango
         rangos.append((a, a + k - 1))   # Calcula el id de fin del rango sumandoles k-1 al id del inicio
     return rangos   # Retorna los rangos
-
-
-# ------------------------------------------------------------ PRUEBA RÁPIDA
-if __name__ == "__main__":
-    est = generar_estudiantes(100, "ordenado")
-    print("ordenado:", est[0].id, "...", est[-1].id, "| n =", len(est))   # 1000 ... 1099 | n = 100
-    est = generar_estudiantes(100, "aleatorio")
-    print("aleatorio, IDs únicos:", len({e.id for e in est}) == 100)
-    print("búsquedas:", len(generar_busquedas(est, 1000)))                # 1000
-    rangos = generar_rangos(100, 5, 10)
-    print("rangos:", rangos)                                              # cada uno con b - a = 9

@@ -3,12 +3,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
-# ----------------------------------------------------------------------
-# CONFIGURACIÓN: ajusta esto a tus archivos reales
-# ----------------------------------------------------------------------
-# Tu script 'run_experimentos' guarda un CSV POR EXPERIMENTO dentro de 'datos/'.
-# Aquí se listan todos para que este script los lea y los junte en uno solo.
-# Si corriste con PRUEBA = True, cambia los nombres para que terminen en "_prueba.csv".
 ARCHIVOS_CSV = [
     "datos/e1_insercion.csv",
     "datos/e2_busqueda.csv",
@@ -79,6 +73,28 @@ def decidir_escala(valores):
     return "log" if razon > 50 else "linear"
  
  
+def calcular_pendiente(N, valores, escala_y):
+    # Pendiente de la recta de regresión sobre log10(N) vs log10(valores).
+    # Esta pendiente ES el exponente k de una relación valores = c * N^k,
+    # que es justo la forma de la complejidad algorítmica (N^1, N^2, log N, etc.).
+    # Solo tiene sentido calcularla si AMBOS ejes están en escala log;
+    # si el eje Y es lineal, se omite (devuelve None).
+    if escala_y != "log":
+        return None
+ 
+    N = np.asarray(N, dtype=float)
+    valores = np.asarray(valores, dtype=float)
+    mascara = (N > 0) & (valores > 0)        # log no está definido en 0 o negativos
+    if mascara.sum() < 2:                     # hacen falta al menos 2 puntos para una recta
+        return None
+ 
+    log_N = np.log10(N[mascara])
+    log_valores = np.log10(valores[mascara])
+ 
+    pendiente, _ = np.polyfit(log_N, log_valores, 1)   # ajuste por mínimos cuadrados, grado 1 (recta)
+    return pendiente
+ 
+ 
 def graficar_subplot(ax, resumen, orden, escala_y):
     datos_orden = resumen[resumen["orden"] == orden]
  
@@ -87,12 +103,16 @@ def graficar_subplot(ax, resumen, orden, escala_y):
         if datos_estr.empty:
             continue
  
+        pendiente = calcular_pendiente(datos_estr["N"], datos_estr["mean"], escala_y)
+        nombre = NOMBRES.get(estructura, estructura)
+        etiqueta = f"{nombre} (pendiente≈{pendiente:.2f})" if pendiente is not None else nombre
+ 
         # errorbar con yerr=std dibuja la barra de desviación estándar sobre cada punto
         ax.errorbar(
             datos_estr["N"],
             datos_estr["mean"],
             yerr=datos_estr["std"],
-            label=NOMBRES.get(estructura, estructura),
+            label=etiqueta,
             color=COLORES.get(estructura),
             marker="o",
             markersize=5,
@@ -200,9 +220,13 @@ def graficar_altura(df, carpeta_salida):
             if datos_estr.empty:
                 continue
  
+            pendiente = calcular_pendiente(datos_estr["N"], datos_estr["mean"], escala_y)
+            nombre = NOMBRES.get(estructura, estructura)
+            etiqueta = f"{nombre} (pendiente≈{pendiente:.2f})" if pendiente is not None else nombre
+ 
             ax.errorbar(
                 datos_estr["N"], datos_estr["mean"], yerr=datos_estr["std"],
-                label=NOMBRES.get(estructura, estructura), color=COLORES.get(estructura),
+                label=etiqueta, color=COLORES.get(estructura),
                 marker="o", markersize=5, capsize=3, linewidth=1.8,
             )
             ax.fill_between(
