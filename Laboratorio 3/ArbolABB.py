@@ -4,7 +4,6 @@ class NodoABB:                       # Clase que representa un nodo del árbol A
         self.izquierda = None        # Hijo izquierdo
         self.derecha = None          # Hijo derecho
         
-    
 class ABB:                             # Esta clase representa el árbol ABB y define las funciones para insertar y buscar estudiantes
     def __init__(self):
         self.raiz = None               # Al crear el árbol, la raíz es None ya que no hay ningún nodo aún.

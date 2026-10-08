@@ -186,11 +186,12 @@ def experimento_3_listado(w):
             print(f"[E3] orden={orden:9} N={n:6} listo ({REPETICIONES} repeticiones)")   # Se muestra el progreso cada ciclo completado
 
 
-# ------------------------------------------------------------ E5: BÚSQUEDA POR RANGO
+# ------------- E5: BÚSQUEDA POR RANGO ----------------
 def experimento_5_rango(w):
     """Tiempo de Q búsquedas por rango [a, b], cada una devolviendo K estudiantes.
     Solo se usan tamaños N >= K, porque un rango de K estudiantes no cabe en menos."""
 
+    # Funciones auxiliares para construir cada estructura 
     def construir_lista(estudiantes):
         lista = []
         for e in estudiantes:
@@ -208,7 +209,8 @@ def experimento_5_rango(w):
         for e in estudiantes:
             arbol.insertarBMas(e)
         return arbol
-
+    # Funciones auxiliares para realizar las búsquedas por rango, llamando al método de cada estructura
+    # Para cada estructura se hace un ciclo para buscar cada rango que será generado por otra función
     def rangos_lista(lista, rangos):
         for a, b in rangos:
             Lista.buscar_rango(lista, a, b)
@@ -220,48 +222,45 @@ def experimento_5_rango(w):
     def rangos_bmas(arbol, rangos):
         for a, b in rangos:
             arbol.buscar_rango(a, b)
+    # Diccionario donde para cada estructura se guarda la función auxiliar para construir la estructura y buscar por rangos
+    estructuras = {"lista": (construir_lista, rangos_lista),"abb": (construir_abb, rangos_abb), "bmas": (construir_bmas, rangos_bmas)}
 
-    estructuras = {"lista": (construir_lista, rangos_lista),
-                   "abb": (construir_abb, rangos_abb),
-                   "bmas": (construir_bmas, rangos_bmas)}
+    for orden in ORDENES:          # Se hace el experimento de búsqueda por rangos insertando los estudiantes en orden y en desorden 
+        for n in TAMANOS:          # Se prueban también todos los tamaños de estudiantes
+            if n < TAMANO_RANGO:   # Se verifica que el rango de estudiantes (100) sea menor que el número de estudiantes total para que sea posible buscarlos. 
+                continue           # Si n es menor, se prueba con con otro tamaño
+            for rep in range(1, REPETICIONES + 1):            # Para cada combinación se hace 15 repeticiones
+                estudiantes = generar_estudiantes(n, orden)   # Se generan los estudiantes según el orden 
+                rangos = generar_rangos(n, NUMERO_DE_RANGOS, TAMANO_RANGO)    # Se generan 1000 rangos de 100 estudiantes, que serán los mismos para las 3 estructuras para que sea justo
 
-    # Si decides usar solo inserción aleatoria en E5, cambia ORDENES por ["aleatorio"]
-    for orden in ORDENES:
-        for n in TAMANOS:
-            if n < TAMANO_RANGO:
-                continue
-            for rep in range(1, REPETICIONES + 1):
-                estudiantes = generar_estudiantes(n, orden)
-                rangos = generar_rangos(n, NUMERO_DE_RANGOS, TAMANO_RANGO)    # mismos rangos para las 3 estructuras
-
-                for estr, (construir, buscar_rangos) in estructuras.items():
-                    objeto = construir(estudiantes)         # fuera del cronómetro
-
-                    tiempo, _ = medir(buscar_rangos, objeto, rangos)
+                for estr, (construir, buscar_rangos) in estructuras.items():  
+                    objeto = construir(estudiantes)                    # Construye las estructuras fuera del croónometro, ya que se mide únicamente el tiempo de búsqueda
+                    tiempo, _ = medir(buscar_rangos, objeto, rangos)   # Se mide el tiempo en el que la estructura correspondiente realiza la búsqueda de todos los rangos
+                    # Se escribe el resultado directamente en el CSV del experimento #5
                     w.writerow(["E5", estr, orden, n, NUMERO_DE_RANGOS, TAMANO_RANGO, rep, tiempo, altura_de(estr, objeto)])
 
             print(f"[E5] orden={orden:9} N={n:6} listo ({REPETICIONES} repeticiones)")
 
 
-# ------------------------------------------------------------ PRINCIPAL
+# --------------- PRINCIPAL ---------------
 def correr(nombre, funcion, columnas):
     """Abre el CSV propio del experimento, escribe el encabezado y ejecuta el experimento."""
-    os.makedirs("datos", exist_ok=True)
-    archivo = f"datos/{nombre}.csv"
-    with open(archivo, "w", newline="", encoding="utf-8") as f:
-        w = csv.writer(f)
-        w.writerow(columnas)
-        funcion(w)
+    os.makedirs("datos", exist_ok=True)      # Crea la carpeta "datos" si todavía no existe.
+    archivo = f"datos/{nombre}.csv"          # Construye la ruta del archivo utilizando el nombre recibido.
+    with open(archivo, "w", newline="", encoding="utf-8") as f:       # Abre el archivo en modo escritura ("w")
+        w = csv.writer(f)       
+        w.writerow(columnas)        # Escribe la primera fila del CSV, que contiene los nombres de las columnas
+        funcion(w)                  # La función del experimento será la encargada de realizar las pruebas
     print(f"Datos crudos guardados en {archivo}\n")
 
 
 def main():
-    # Para correr solo algunos experimentos, comenta las líneas que no quieras.
+    """ Función principal del programa. Ejecuta todos los experimentos definidos y guarda cada uno en su propio archivo CSV."""
     correr("e1_insercion", experimento_1_insercion, COLUMNAS)
     correr("e2_busqueda", experimento_2_busqueda, COLUMNAS)
     correr("e3_listado", experimento_3_listado, COLUMNAS)
-    correr("e5_rango", experimento_5_rango, COLUMNAS_RANGO)
+    correr("e5_rango", experimento_5_rango, COLUMNAS_RANGO)     # Se utiliza COLUMNAS_RANGO porque este experimento tiene información adicional relacionada con los rangos.
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":      # Punto de entrada del programa
     main()
