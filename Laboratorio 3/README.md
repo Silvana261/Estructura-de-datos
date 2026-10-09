@@ -11,6 +11,11 @@ registro contiene ID (matrícula única), nombre, edad y promedio. El sistema de
 3. Listar todos los estudiantes en orden ascendente de ID.
 
 Además de estas tres operaciones se evaluó la búsqueda por rango de IDs.
+### Objetivo
+Estudiar experimentalmente cómo la estrategia de almacenamiento y búsqueda afecta el tiempo
+de ejecución a medida que aumenta el tamaño de los datos (N). Se comparan tres estructuras:
+**lista**, **árbol binario de búsqueda (ABB)** y **árbol B+**, y se contrastan los resultados
+con la complejidad teórica. Las conclusiones se sustentan en mediciones y análisis estadístico.
 
 ## 2. Estructuras de datos y algoritmos
 Las tres estructuras guardan objetos `Estudiante` con los campos `id` (único), `nombre`, `edad`
@@ -78,4 +83,85 @@ Las operaciones, con g = 50 como constante:
 - **O(log_g N) — Altura:** se baja por el primer hijo hasta una hoja (una hoja sola cuenta como
   nivel 1).
 
+### 2.3  GenerarDatos.py
+
+Todo se genera con el módulo `random` de Python (`GenerarDatos.py`), **fuera del cronómetro**: el
+tiempo de generar los datos nunca entra en las mediciones.
+
+#### Estudiantes
+
+- Cada estudiante tiene `id`, `nombre`, `edad` y `promedio`.
+- Los **IDs** son los N enteros consecutivos desde 1000 hasta 1000 + N − 1, todos únicos.
+- El **orden de inserción** se controla con el parámetro `orden`:
+  - `aleatorio`: los IDs se obtienen con `random.sample`, que devuelve una permutación al azar.
+  - `ordenado`: se toma esa misma colección de IDs y se ordena de forma ascendente.
+- El **nombre** se escoge al azar entre 16 nombres, la **edad** es un entero al azar entre 18 y
+  50, y el **promedio** es un decimal al azar entre 0.0 y 5.0 con dos cifras. Estos tres campos
+  no intervienen en ninguna operación medida: todas las estructuras trabajan solo con el ID.
+- La lista devuelta ya está en el orden en que se van a insertar, y se generan datos nuevos en
+  cada repetición.
+
+#### Búsquedas por ID
+
+- Para cada repetición se generan M = 1000 IDs a buscar.
+- Cada ID se escoge al azar entre los estudiantes ya generados, así que:
+  - todos los IDs buscados **existen** en la estructura (no hay búsquedas fallidas)
+- Las búsquedas son independientes del orden de inserción: en el caso `ordenado` los IDs se
+  insertan de forma ascendente, pero se buscan en orden aleatorio.
+- Las tres estructuras reciben **la misma lista de IDs**.
+
+#### Rangos
+
+- Para cada repetición se generan Q = 1000 rangos de la forma [a, a + K − 1], con K = 100.
+- El inicio `a` se escoge al azar entre 1000 y 1000 + N − K, para que el rango no se salga del
+  conjunto de IDs.
+- Como los IDs son consecutivos, **todos los rangos contienen exactamente K = 100 estudiantes**.
+  Por eso el costo de recorrer el resultado es el mismo en todos los rangos y en todos los N, y
+  cualquier diferencia entre estructuras viene de cómo localizan el inicio y recorren el rango.
+- E5 solo se corre con N ≥ K, porque con menos estudiantes un rango de 100 no existe.
+- Las tres estructuras reciben **los mismos rangos**.
+
+
+## 3. Diseño experimental (`experimentos.py`)
+
+Este archivo contiene el cronómetro común a todos los experimentos y los parámetros que
+controlan cómo se corren. Las funciones `experimento_1_insercion`, `experimento_2_busqueda`,
+`experimento_3_listado` y `experimento_5_rango` reutilizan ambos.
+
+### 3.1 Función `medir`
+
+- **`gc.collect()` antes de medir:** fuerza una recolección de basura completa justo antes de
+  arrancar el cronómetro. Así se "limpia" cualquier objeto pendiente de liberar que se haya
+  acumulado en la repetición anterior, y se reduce la probabilidad de que el recolector decida
+  dispararse por sí solo durante la medición siguiente.
+- **`gc.disable()` durante la medición:** el recolector de basura de Python puede activarse en
+  cualquier momento, incluso a mitad de la función que se está cronometrando, y añadir una pausa
+  impredecible al tiempo medido. Desactivarlo elimina esa fuente de ruido del sistema, para que
+  el tiempo reportado refleje el trabajo real del algoritmo y no una interrupción externa.
+- **`time.perf_counter()`:** se usa en vez de `time.time()` porque es un reloj de alta resolución
+  pensado específicamente para medir intervalos cortos de tiempo, no afectado por ajustes del
+  reloj del sistema (como la sincronización horaria).
+- **Qué queda fuera del cronómetro:** solo se mide `funcion(*args)`. La generación de los
+  estudiantes, de los IDs a buscar y de los rangos, así como la construcción de la estructura en
+  los experimentos 2 y 5, ocurre *antes* de llamar a `medir`, para que el tiempo reportado
+  corresponda únicamente a la operación que se quiere estudiar (inserción, búsqueda, listado o
+  rango), y no a la preparación de los datos. 
+
+### 3.2 Parámetros del experimento
+
+- **`NUM_BUSQUEDAS_INDIVDUALES` (M = 1000)** y **`NUMERO_DE_RANGOS` (Q = 1000):** una sola
+  búsqueda o un solo rango tarda microsegundos, un tiempo demasiado pequeño para medirse con
+  precisión y fácilmente dominado por el overhead fijo de Python. Agrupar M búsquedas (o Q
+  rangos) dentro de un mismo bloque cronometrado amortigua ese overhead entre muchas operaciones
+  y lleva el tiempo total de la corrida a un rango donde el reloj del sistema puede medirlo con
+  confianza.
+- **`TAMANO_RANGO` (K = 100):** se mantiene **constante** en todos los N para aislar el efecto
+  que se quiere estudiar. El costo teórico de una consulta de rango tiene la forma
+  O(costo_de_llegar + K): si K variara junto con N, el tiempo medido mezclaría dos efectos
+  distintos —cuánto cuesta ubicar el inicio del rango, y cuánto cuesta recorrer los resultados—
+  y no se podría atribuir un cambio en el tiempo a uno u otro. Con K fijo, el término K es
+  idéntico en cada medición, así que cualquier diferencia observada al variar N proviene
+  exclusivamente del costo de localizar el inicio del rango, que es lo que distingue a las tres
+  estructuras entre sí.
+  
 
