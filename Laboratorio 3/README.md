@@ -106,7 +106,7 @@ Para generar los rangos, lo hace escogiendo aleatoriamente el ID de inicio verif
 
 ## 3. Diseño experimental (`experimentos.py`)
 
-### Metodología de los experimentos
+### 3.1 Metodología de los experimentos
 En todos los experimentos se busca evaluar y comparar el rendimiento de las estructuras de datos (Lista, ABB y árbol B+) al variar el número de estudiantes (N) y el orden de inserción. Para que la comparación sea válida, se mantienen constantes los demás parámetros de cada experimento, como la cantidad de búsquedas o consultas realizadas y el tamaño de los rangos consultados. Para cada combinación de (N) y orden de inserción se realizan 15 repeticiones, con el fin de obtener resultados más representativos y reducir la influencia de variaciones puntuales en los tiempos de ejecución. La función de cada experimento se describe a continuación:
 
 *  ###  E1  (`experimento_1_insercion`)
@@ -128,28 +128,29 @@ En este experimento se calcula la altura del árbol ABB y B+ para cada tamaño d
 * ### E5 (`experimento_5_rango`)
 Sobre cada estructura ya construida, se ejecutan búsquedas para `Q = 1000` rangos, generados con la función `generar_rangos`. Se hace para los números de estudiantes mayores a 100 ya que cada rango devuelve ` K = 100` estudiantes y también se hace para cada orden de inserción. Se cronometra el tiempo total de las Q búsquedas.
 
+Cada repetición del experimento se guarda en una fila de un CSV individual para cada experimento (excepto el 4).
   
-## 3.1 Método de medición (`medir`)
+## 3.2 Método de medición (`medir`)
 Para medir los tiempos de ejecución se utiliza la función medir(), que emplea time.perf_counter() por su precisión para medir intervalos de tiempo cortos. Antes de cada medición, se ejecuta gc.collect() para liberar objetos que ya no se utilizan y se desactiva temporalmente el recolector de basura mediante gc.disable(), evitando que sus pausas interfieran con el tiempo registrado. Al finalizar, el recolector se vuelve a activar mediante gc.enable(), incluso si ocurre un error durante la ejecución.
 
 Dentro de esta, se pone la función y se le pasan los argumentos necesarios de las que se quieran ejecutar puntualmente para medir sólo lo necesario de cada experimento.
 
 
-### 3.2 Parámetros del experimento
+## 3. Parámetros del experimento
 
-- **`NUM_BUSQUEDAS_INDIVDUALES` (M = 1000)** y **`NUMERO_DE_RANGOS` (Q = 1000):** una sola
-  búsqueda o un solo rango tarda microsegundos, un tiempo demasiado pequeño para medirse con
-  precisión y fácilmente dominado por el overhead fijo de Python. Agrupar M búsquedas (o Q
-  rangos) dentro de un mismo bloque cronometrado amortigua ese overhead entre muchas operaciones
-  y lleva el tiempo total de la corrida a un rango donde el reloj del sistema puede medirlo con
-  confianza.
-- **`TAMANO_RANGO` (K = 100):** se mantiene **constante** en todos los N para aislar el efecto
-  que se quiere estudiar. El costo teórico de una consulta de rango tiene la forma
-  O(costo_de_llegar + K): si K variara junto con N, el tiempo medido mezclaría dos efectos
-  distintos —cuánto cuesta ubicar el inicio del rango, y cuánto cuesta recorrer los resultados—
-  y no se podría atribuir un cambio en el tiempo a uno u otro. Con K fijo, el término K es
-  idéntico en cada medición, así que cualquier diferencia observada al variar N proviene
-  exclusivamente del costo de localizar el inicio del rango, que es lo que distingue a las tres
-  estructuras entre sí.
+- ### `NUM_BUSQUEDAS_INDIVIDUALES = 1000 (M)`:
+  Se realizan 1.000 búsquedas por medición para obtener un tiempo más representativo del rendimiento de cada estructura y reducir la influencia de pequeñas variaciones en búsquedas individuales.
+- ### `NUMERO_DE_RANGOS = 1000 (Q)`:
+  Se ejecutan 1.000 consultas por rango para evaluar el rendimiento de esta operación sobre un conjunto suficiente de consultas y facilitar la comparación entre estructuras.
+- ### `TAMANO_RANGO = 100 (K)`:
+  Cada consulta devuelve exactamente 100 estudiantes para que todas las estructuras procesen la misma cantidad de resultados por consulta. Así, las diferencias de tiempo se relacionan principalmente con la forma en que cada estructura busca y recorre los datos, y no con que una tenga que devolver más estudiantes que otra.
+- ### `TAMANOS = [10, 25, 50, 100, 300, 1000, 2000, 5000, 10000, 20000, 30000]`:
+  Se utilizan tamaños crecientes para observar cómo cambia el rendimiento a medida que aumenta la cantidad de estudiantes. Incluir conjuntos pequeños y grandes permite identificar diferencias entre las estructuras que podrían no ser evidentes al evaluar un único tamaño, así como estudiar sus tendencias de crecimiento.
+- ### `REPETICIONES = 15`:
+  Se realizan 15 repeticiones por cada combinación de tamaño (N) y orden de inserción porque los tiempos pueden variar entre ejecuciones debido a factores externos, como la actividad del sistema operativo. Las repeticiones permiten calcular promedios, lo que ayuda a distinguir tendencias consistentes de resultados aislados.
+- ### `ORDENES = ["aleatorio", "ordenado"]`:
+  Se utilizan estos dos órdenes para estudiar cómo afecta la secuencia de inserción al rendimiento de cada estructura.
+  
+
   
 
