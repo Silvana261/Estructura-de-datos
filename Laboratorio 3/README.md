@@ -85,41 +85,24 @@ Las operaciones, con g = 50 como constante:
 
 ### 2.3  GenerarDatos.py
 
-Todo se genera con el módulo `random` de Python (`GenerarDatos.py`), **fuera del cronómetro**: el
+Todo se genera con el módulo `random` de Python, **fuera del cronómetro**: el
 tiempo de generar los datos nunca entra en las mediciones.
 
-#### Estudiantes
+#### Clase Estudiante:
+Define lo que representa un estudiante; cada uno tiene su id, nombre, edad y promedio. El id será la clave de búsqueda en los experimentos
 
-- Cada estudiante tiene `id`, `nombre`, `edad` y `promedio`.
-- Los **IDs** son los N enteros consecutivos desde 1000 hasta 1000 + N − 1, todos únicos.
-- El **orden de inserción** se controla con el parámetro `orden`:
-  - `aleatorio`: los IDs se obtienen con `random.sample`, que devuelve una permutación al azar.
-  - `ordenado`: se toma esa misma colección de IDs y se ordena de forma ascendente.
-- El **nombre** se escoge al azar entre 16 nombres, la **edad** es un entero al azar entre 18 y
-  50, y el **promedio** es un decimal al azar entre 0.0 y 5.0 con dos cifras. Estos tres campos
-  no intervienen en ninguna operación medida: todas las estructuras trabajan solo con el ID.
-- La lista devuelta ya está en el orden en que se van a insertar, y se generan datos nuevos en
-  cada repetición.
+#### Generar_estudiantes:
+Es una función que genera los estudiantes. Recibe como parámetros `n` estudiantes a generar y el `orden` que puede ser `aleatorio` u `ordenado`.
+Aquí se generar los ids aleatoriamente desde 1000 hasta 1000 + n estudiantes. Luego según el parámetro de orden se ordenan crecientemente con sort(), sino, se dejan tal y como se generan.
+Finalmente, se generan los n estudiantes asignandole a cada uno un ID y escogiendo un nombre, edad y promedio aleatorio (los nombres se escogen aleatoriamente de una lista definida). Y la lista se devuelve en el orden a insertar
 
-#### Búsquedas por ID
+#### generar_busquedas:
+Esta función escoge `m` ids aleatorios de la lista de estudiantes ya existente, y devuelve la lista de los ids a buscar en el experimento de búsquedas aleatorias.
 
-- Para cada repetición se generan M = 1000 IDs a buscar.
-- Cada ID se escoge al azar entre los estudiantes ya generados, así que:
-  - todos los IDs buscados **existen** en la estructura (no hay búsquedas fallidas)
-- Las búsquedas son independientes del orden de inserción: en el caso `ordenado` los IDs se
-  insertan de forma ascendente, pero se buscan en orden aleatorio.
-- Las tres estructuras reciben **la misma lista de IDs**.
+#### generar_rangos:
+Esta función genera `Q` rangos de búsqueda cada uno con la misma cantidad `K` de estudiantes. 
+Para generar los rangos, lo hace escogiendo aleatoriamente el ID de inicio verificando que no se se pase del límite número de estudiantes - `K` para que sea un rango válido
 
-#### Rangos
-
-- Para cada repetición se generan Q = 1000 rangos de la forma [a, a + K − 1], con K = 100.
-- El inicio `a` se escoge al azar entre 1000 y 1000 + N − K, para que el rango no se salga del
-  conjunto de IDs.
-- Como los IDs son consecutivos, **todos los rangos contienen exactamente K = 100 estudiantes**.
-  Por eso el costo de recorrer el resultado es el mismo en todos los rangos y en todos los N, y
-  cualquier diferencia entre estructuras viene de cómo localizan el inicio y recorren el rango.
-- E5 solo se corre con N ≥ K, porque con menos estudiantes un rango de 100 no existe.
-- Las tres estructuras reciben **los mismos rangos**.
 
 
 ## 3. Diseño experimental (`experimentos.py`)
