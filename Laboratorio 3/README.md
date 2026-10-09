@@ -37,7 +37,7 @@ orden en que se insertan.
 
 Cada nodo guarda un estudiante y apunta a un hijo izquierdo (IDs menores) y a uno derecho (IDs
 mayores o iguales), así que su forma depende del orden de inserción. Todas
-las operaciones son iterativas (con pila o ciclo, sin recursión). Ya que python tiene un límite de recursión.
+las operaciones son iterativas (sin recursión). Ya que python tiene un límite de recursión.
 
 - **Insertar:** baja desde la raíz comparando IDs hasta encontrar un hijo vacío.
   - IDs aleatorios: O(log N)
@@ -59,7 +59,7 @@ las operaciones son iterativas (con pila o ciclo, sin recursión). Ya que python
 
 Árbol balanceado donde **todos los estudiantes están en las hojas**, y los nodos internos solo
 guardan claves que orientan la búsqueda. Las hojas están enlazadas entre sí (`siguiente`), lo
-que permite recorrerlas en orden sin volver a subir al árbol.
+que permite recorrerlas en orden sin volver a subir al árbol. También se hizo de manera iterativa.
 - **Grado = 50:** cada nodo admite hasta 50 claves.
 - **Inserción:** se baja a la hoja correspondiente guardando los nodos internos recorridos, se
   inserta el ID en su posición ordenada y se rechaza si ya existe. Si la hoja supera 50 claves,
@@ -83,33 +83,52 @@ Las operaciones, con g = 50 como constante:
 - **O(log_g N) — Altura:** se baja por el primer hijo hasta una hoja (una hoja sola cuenta como
   nivel 1).
 
-### 2.3  GenerarDatos.py
+### 2.4  `GenerarDatos.py`
 
 Todo se genera con el módulo `random` de Python, **fuera del cronómetro**: el
 tiempo de generar los datos nunca entra en las mediciones.
 
-#### Clase Estudiante:
+* #### Clase Estudiante:
 Define lo que representa un estudiante; cada uno tiene su id, nombre, edad y promedio. El id será la clave de búsqueda en los experimentos
 
-#### Generar_estudiantes:
+* #### Generar_estudiantes:
 Es una función que genera los estudiantes. Recibe como parámetros `n` estudiantes a generar y el `orden` que puede ser `aleatorio` u `ordenado`.
 Aquí se generar los ids aleatoriamente desde 1000 hasta 1000 + n estudiantes. Luego según el parámetro de orden se ordenan crecientemente con sort(), sino, se dejan tal y como se generan.
 Finalmente, se generan los n estudiantes asignandole a cada uno un ID y escogiendo un nombre, edad y promedio aleatorio (los nombres se escogen aleatoriamente de una lista definida). Y la lista se devuelve en el orden a insertar
 
-#### generar_busquedas:
+* #### generar_busquedas:
 Esta función escoge `m` ids aleatorios de la lista de estudiantes ya existente, y devuelve la lista de los ids a buscar en el experimento de búsquedas aleatorias.
 
-#### generar_rangos:
+* #### generar_rangos:
 Esta función genera `Q` rangos de búsqueda cada uno con la misma cantidad `K` de estudiantes. 
 Para generar los rangos, lo hace escogiendo aleatoriamente el ID de inicio verificando que no se se pase del límite número de estudiantes - `K` para que sea un rango válido
 
 
-
 ## 3. Diseño experimental (`experimentos.py`)
 
-Este archivo contiene el cronómetro común a todos los experimentos y los parámetros que
-controlan cómo se corren. Las funciones `experimento_1_insercion`, `experimento_2_busqueda`,
-`experimento_3_listado` y `experimento_5_rango` reutilizan ambos.
+### Metodología de los experimentos
+En todos los experimentos se busca evaluar y comparar el rendimiento de las estructuras de datos (Lista, ABB y árbol B+) al variar el número de estudiantes (N) y el orden de inserción. Para que la comparación sea válida, se mantienen constantes los demás parámetros de cada experimento, como la cantidad de búsquedas o consultas realizadas y el tamaño de los rangos consultados. Para cada combinación de (N) y orden de inserción se realizan 15 repeticiones, con el fin de obtener resultados más representativos y reducir la influencia de variaciones puntuales en los tiempos de ejecución.
+
+*  ###  E1  (`experimento_1_insercion`)
+Se insertan N estudiantes, uno por uno, en cada estructura inicialmente vacía. La inserción se
+hace con IDs aleatorios y con IDs en orden ascendente, para comparar el rendimiento de cada
+estructura al cambiar el orden de inserción. Se cronometra el tiempo de insertar los N
+estudiantes completos. Se realizan 15 repeticiones por cada combinación de `N` y orden de inserción.
+
+* ### E2 (` experimento_2_busqueda`)
+Sobre cada estructura ya construida con `N` estudiantes, se buscan `M = 1000` ids escogidos con la función `generar_busquedas`. Este experimento se hace tanto en la estructura construida con inserción aleatoria y en orden. Se evalúa cómo varía el rendimiento de las búsquedas al aumentar (N) y el orden de inserción, manteniendo constante la cantidad de búsquedas. Se cronometra únicamente el tiempo total de las (M) búsquedas; el tiempo de construcción de la estructura no se incluye. Se realizan 15 repeticiones por cada combinación de (N) y orden de inserción. 
+
+* ### E3 (´experimento_3_listado´)
+Sobre cada estructura ya construida con (N) estudiantes, se obtiene la secuencia completa de estudiantes ordenada por ID, tanto para estructuras construidas con IDs aleatorios como con IDs en orden ascendente. Se quiere evaluar cómo influye el orden de inserción y el aumento de `N` en el rendimiento del listado ordenado. Se cronometra únicamente la operación de listado; el tiempo de construcción de la estructura no se incluye. Se realizan 15 repeticiones por cada combinación de (N) y orden de inserción.
+
+* ### E4 (altura VS árbol)
+No es una medición de tiempo independiente, sino que la gráfica sale a partir de el CSV de `E1`
+En este experimento se calcula la altura del árbol ABB y B+ para cada tamaño de estudiantes N y orden de inserción. Esto permite analizar cómo varía la altura de los árboles al aumentar `N` y  cómo influye el orden de inserción. 
+
+* ### E5 (`experimento_5_rango`)
+Sobre cada estructura ya construida, se ejecutan búsquedas para `Q = 1000` rangos, generados con la función `generar_rangos`. Se hace para los números de estudiantes mayores a 100 ya que cada rango devuelve ` K = 100` estudiantes y también se hace para cada orden de inserción. Se cronometra el tiempo total de las Q búsquedas.
+
+  
 
 ### 3.1 Función `medir`
 
