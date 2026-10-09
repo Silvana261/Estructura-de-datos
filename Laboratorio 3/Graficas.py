@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-
 ARCHIVOS_CSV = [
     "datos/e1_insercion.csv",
     "datos/e2_busqueda.csv",
@@ -48,31 +47,32 @@ def cargar_datos(archivos):
     return df
 
 
-def quitar_atipicos(tiempos):
+def contar_atipicos(tiempos):
     # Regla de Tukey sobre las repeticiones de un mismo (estructura, orden, N):
-    # se descarta lo que quede fuera de [Q1 - 1.5*IQR, Q3 + 1.5*IQR].
+    # una repetición se MARCA como atípica si queda fuera de [Q1 - 1.5*IQR, Q3 + 1.5*IQR].
+    # Solo se cuentan para reportarlas; NO se descartan.
     q1, q3 = tiempos.quantile(0.25), tiempos.quantile(0.75)
     iqr = q3 - q1
-    return tiempos[(tiempos >= q1 - 1.5 * iqr) & (tiempos <= q3 + 1.5 * iqr)]
+    return int(((tiempos < q1 - 1.5 * iqr) | (tiempos > q3 + 1.5 * iqr)).sum())
 
 
 def agrupar(df, experimento):
-    # Por cada (estructura, orden, N): se quitan los atípicos y sobre lo restante
-    # se calcula promedio y desviación estándar.
+    # Por cada (estructura, orden, N): promedio y desviación estándar de TODAS las repeticiones.
+    # Las repeticiones atípicas se conservan; solo se cuenta cuántas hay para reportarlas.
     datos = df[df["experimento"] == experimento]
     filas = []
-    descartados = 0
+    marcadas = 0
     for (estr, orden, n), g in datos.groupby(["estructura", "orden", "N"]):
-        limpios = quitar_atipicos(g["tiempo_s"])
-        descartados += len(g) - len(limpios)
+        t = g["tiempo_s"]
+        marcadas += contar_atipicos(t)
         filas.append({"estructura": estr, "orden": orden, "N": n,
-                      "mean": limpios.mean(), "std": limpios.std(), "count": len(limpios)})
-    print(f"{experimento}: {descartados} de {len(datos)} repeticiones descartadas como atípicas")
+                      "mean": t.mean(), "std": t.std(), "count": len(t)})
+    print(f"{experimento}: {marcadas} de {len(datos)} repeticiones marcadas como atípicas (se conservan)")
     return pd.DataFrame(filas)
 
 
 def agrupar_altura(df):
-    # La altura no se filtra: es una propiedad estructural del árbol, no una medición con ruido.
+    # La altura es una propiedad estructural del árbol, no una medición con ruido.
     datos = df.copy()
     datos["altura"] = pd.to_numeric(datos["altura"], errors="coerce")
     datos = datos.dropna(subset=["altura"])
@@ -81,13 +81,6 @@ def agrupar_altura(df):
     datos = datos[datos["experimento"] == sorted(datos["experimento"].unique())[0]]
     return (datos.groupby(["estructura", "orden", "N"])["altura"]
             .agg(["mean", "std", "count"]).reset_index())
-
-
-def decidir_escala(valores):
-    valores = valores[valores > 0]
-    if len(valores) < 2:
-        return "linear"
-    return "log" if valores.max() / valores.min() > 50 else "linear"
 
 
 def calcular_pendiente(N, valores):
@@ -132,18 +125,17 @@ def graficar_subplot(ax, resumen, orden, escala_y, ylabel, estructuras):
     ax.set_xlabel("Tamaño de la entrada (N)")
     ax.set_ylabel(ylabel)
     ax.set_title(NOMBRES_ORDEN.get(orden, orden))
-    ax.legend(title="Estructura")
+    ax.legend(title=f"Estructura (pendiente con N ≥ {N_MIN_AJUSTE})")
     ax.grid(True, which="both", linestyle="--", alpha=0.4)
 
-    texto = (f"Escala eje X: logarítmica\nEscala eje Y: {'logarítmica' if escala_y == 'log' else 'lineal'}\n"
-             f"Pendiente: log-log con N ≥ {N_MIN_AJUSTE}")
+    texto = "Escala eje X: logarítmica\nEscala eje Y: logarítmica"
     ax.text(0.02, 0.98, texto, transform=ax.transAxes, fontsize=8, va="top", ha="left",
             bbox=dict(boxstyle="round", facecolor="white", alpha=0.8, edgecolor="gray"))
 
 
 def hacer_figura(resumen, titulo, ylabel, ruta, estructuras):
     ordenes = [o for o in ["aleatorio", "ordenado"] if o in resumen["orden"].unique()]
-    escala_y = decidir_escala(resumen["mean"].values)
+    escala_y = "log"      # siempre log-log
 
     fig, axes = plt.subplots(1, len(ordenes), figsize=(7 * len(ordenes), 6), squeeze=False)
     for ax, orden in zip(axes[0], ordenes):
@@ -169,7 +161,7 @@ def main():
         nombre = NOMBRES_EXPERIMENTO.get(exp, exp)
         hacer_figura(
             resumen,
-            f"{exp} — {nombre}\n(promedio sin atípicos; barras y franja = ±1 desviación estándar)",
+            f"{exp} — {nombre}\n(promedio de todas las repeticiones; barras y franja = ±1 desviación estándar)",
             "Tiempo (segundos)",
             os.path.join(CARPETA_SALIDA, f"{exp}_{nombre.replace(' ', '_')}.png"),
             ("lista", "abb", "bmas"),
