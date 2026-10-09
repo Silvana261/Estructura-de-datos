@@ -107,7 +107,7 @@ Para generar los rangos, lo hace escogiendo aleatoriamente el ID de inicio verif
 ## 3. Diseño experimental (`experimentos.py`)
 
 ### Metodología de los experimentos
-En todos los experimentos se busca evaluar y comparar el rendimiento de las estructuras de datos (Lista, ABB y árbol B+) al variar el número de estudiantes (N) y el orden de inserción. Para que la comparación sea válida, se mantienen constantes los demás parámetros de cada experimento, como la cantidad de búsquedas o consultas realizadas y el tamaño de los rangos consultados. Para cada combinación de (N) y orden de inserción se realizan 15 repeticiones, con el fin de obtener resultados más representativos y reducir la influencia de variaciones puntuales en los tiempos de ejecución.
+En todos los experimentos se busca evaluar y comparar el rendimiento de las estructuras de datos (Lista, ABB y árbol B+) al variar el número de estudiantes (N) y el orden de inserción. Para que la comparación sea válida, se mantienen constantes los demás parámetros de cada experimento, como la cantidad de búsquedas o consultas realizadas y el tamaño de los rangos consultados. Para cada combinación de (N) y orden de inserción se realizan 15 repeticiones, con el fin de obtener resultados más representativos y reducir la influencia de variaciones puntuales en los tiempos de ejecución. La función de cada experimento se describe a continuación:
 
 *  ###  E1  (`experimento_1_insercion`)
 Se insertan N estudiantes, uno por uno, en cada estructura inicialmente vacía. La inserción se
@@ -118,36 +118,22 @@ estudiantes completos. Se realizan 15 repeticiones por cada combinación de `N` 
 * ### E2 (` experimento_2_busqueda`)
 Sobre cada estructura ya construida con `N` estudiantes, se buscan `M = 1000` ids escogidos con la función `generar_busquedas`. Este experimento se hace tanto en la estructura construida con inserción aleatoria y en orden. Se evalúa cómo varía el rendimiento de las búsquedas al aumentar (N) y el orden de inserción, manteniendo constante la cantidad de búsquedas. Se cronometra únicamente el tiempo total de las (M) búsquedas; el tiempo de construcción de la estructura no se incluye. Se realizan 15 repeticiones por cada combinación de (N) y orden de inserción. 
 
-* ### E3 (´experimento_3_listado´)
+* ### E3 (`experimento_3_listado`)
 Sobre cada estructura ya construida con (N) estudiantes, se obtiene la secuencia completa de estudiantes ordenada por ID, tanto para estructuras construidas con IDs aleatorios como con IDs en orden ascendente. Se quiere evaluar cómo influye el orden de inserción y el aumento de `N` en el rendimiento del listado ordenado. Se cronometra únicamente la operación de listado; el tiempo de construcción de la estructura no se incluye. Se realizan 15 repeticiones por cada combinación de (N) y orden de inserción.
 
-* ### E4 (altura VS árbol)
-No es una medición de tiempo independiente, sino que la gráfica sale a partir de el CSV de `E1`
+* ### E4 (`altura VS árbol`)
+No tiene una función propia, sino que la gráfica sale a partir de el CSV de `E1`
 En este experimento se calcula la altura del árbol ABB y B+ para cada tamaño de estudiantes N y orden de inserción. Esto permite analizar cómo varía la altura de los árboles al aumentar `N` y  cómo influye el orden de inserción. 
 
 * ### E5 (`experimento_5_rango`)
 Sobre cada estructura ya construida, se ejecutan búsquedas para `Q = 1000` rangos, generados con la función `generar_rangos`. Se hace para los números de estudiantes mayores a 100 ya que cada rango devuelve ` K = 100` estudiantes y también se hace para cada orden de inserción. Se cronometra el tiempo total de las Q búsquedas.
 
   
+## 3.1 Método de medición (`medir`)
+Para medir los tiempos de ejecución se utiliza la función medir(), que emplea time.perf_counter() por su precisión para medir intervalos de tiempo cortos. Antes de cada medición, se ejecuta gc.collect() para liberar objetos que ya no se utilizan y se desactiva temporalmente el recolector de basura mediante gc.disable(), evitando que sus pausas interfieran con el tiempo registrado. Al finalizar, el recolector se vuelve a activar mediante gc.enable(), incluso si ocurre un error durante la ejecución.
 
-### 3.1 Función `medir`
+Dentro de esta, se pone la función y se le pasan los argumentos necesarios de las que se quieran ejecutar puntualmente para medir sólo lo necesario de cada experimento.
 
-- **`gc.collect()` antes de medir:** fuerza una recolección de basura completa justo antes de
-  arrancar el cronómetro. Así se "limpia" cualquier objeto pendiente de liberar que se haya
-  acumulado en la repetición anterior, y se reduce la probabilidad de que el recolector decida
-  dispararse por sí solo durante la medición siguiente.
-- **`gc.disable()` durante la medición:** el recolector de basura de Python puede activarse en
-  cualquier momento, incluso a mitad de la función que se está cronometrando, y añadir una pausa
-  impredecible al tiempo medido. Desactivarlo elimina esa fuente de ruido del sistema, para que
-  el tiempo reportado refleje el trabajo real del algoritmo y no una interrupción externa.
-- **`time.perf_counter()`:** se usa en vez de `time.time()` porque es un reloj de alta resolución
-  pensado específicamente para medir intervalos cortos de tiempo, no afectado por ajustes del
-  reloj del sistema (como la sincronización horaria).
-- **Qué queda fuera del cronómetro:** solo se mide `funcion(*args)`. La generación de los
-  estudiantes, de los IDs a buscar y de los rangos, así como la construcción de la estructura en
-  los experimentos 2 y 5, ocurre *antes* de llamar a `medir`, para que el tiempo reportado
-  corresponda únicamente a la operación que se quiere estudiar (inserción, búsqueda, listado o
-  rango), y no a la preparación de los datos. 
 
 ### 3.2 Parámetros del experimento
 
