@@ -115,13 +115,13 @@ hace con IDs aleatorios y con IDs en orden ascendente, para comparar el rendimie
 estructura al cambiar el orden de inserción. Se cronometra el tiempo de insertar los N
 estudiantes completos. Se realizan 15 repeticiones por cada combinación de `N` y orden de inserción.
 
-* ### E2 (` experimento_2_busqueda`)
+* ### E2 (`experimento_2_busqueda`)
 Sobre cada estructura ya construida con `N` estudiantes, se buscan `M = 1000` ids escogidos con la función `generar_busquedas`. Este experimento se hace tanto en la estructura construida con inserción aleatoria y en orden. Se evalúa cómo varía el rendimiento de las búsquedas al aumentar (N) y el orden de inserción, manteniendo constante la cantidad de búsquedas. Se cronometra únicamente el tiempo total de las (M) búsquedas; el tiempo de construcción de la estructura no se incluye. Se realizan 15 repeticiones por cada combinación de (N) y orden de inserción. 
 
 * ### E3 (`experimento_3_listado`)
 Sobre cada estructura ya construida con (N) estudiantes, se obtiene la secuencia completa de estudiantes ordenada por ID, tanto para estructuras construidas con IDs aleatorios como con IDs en orden ascendente. Se quiere evaluar cómo influye el orden de inserción y el aumento de `N` en el rendimiento del listado ordenado. Se cronometra únicamente la operación de listado; el tiempo de construcción de la estructura no se incluye. Se realizan 15 repeticiones por cada combinación de (N) y orden de inserción.
 
-* ### E4 (`altura VS árbol`)
+* ### E4 (`altura`)
 No tiene una función propia, sino que la gráfica sale a partir de el CSV de `E1`
 En este experimento se calcula la altura del árbol ABB y B+ para cada tamaño de estudiantes N y orden de inserción. Esto permite analizar cómo varía la altura de los árboles al aumentar `N` y  cómo influye el orden de inserción. 
 
@@ -136,20 +136,111 @@ Para medir los tiempos de ejecución se utiliza la función medir(), que emplea 
 Dentro de esta, se pone la función y se le pasan los argumentos necesarios de las que se quieran ejecutar puntualmente para medir sólo lo necesario de cada experimento.
 
 
-## 3. Parámetros del experimento
+## 3.3 Parámetros del experimento
 
-- ### `NUM_BUSQUEDAS_INDIVIDUALES = 1000 (M)`:
+- #### `NUM_BUSQUEDAS_INDIVIDUALES = 1000 (M)`:
   Se realizan 1.000 búsquedas por medición para obtener un tiempo más representativo del rendimiento de cada estructura y reducir la influencia de pequeñas variaciones en búsquedas individuales.
-- ### `NUMERO_DE_RANGOS = 1000 (Q)`:
+- #### `NUMERO_DE_RANGOS = 1000 (Q)`:
   Se ejecutan 1.000 consultas por rango para evaluar el rendimiento de esta operación sobre un conjunto suficiente de consultas y facilitar la comparación entre estructuras.
-- ### `TAMANO_RANGO = 100 (K)`:
+- #### `TAMANO_RANGO = 100 (K)`:
   Cada consulta devuelve exactamente 100 estudiantes para que todas las estructuras procesen la misma cantidad de resultados por consulta. Así, las diferencias de tiempo se relacionan principalmente con la forma en que cada estructura busca y recorre los datos, y no con que una tenga que devolver más estudiantes que otra.
-- ### `TAMANOS = [10, 25, 50, 100, 300, 1000, 2000, 5000, 10000, 20000, 30000]`:
+- #### `TAMANOS = [10, 25, 50, 100, 300, 1000, 2000, 5000, 10000, 20000, 30000]`:
   Se utilizan tamaños crecientes para observar cómo cambia el rendimiento a medida que aumenta la cantidad de estudiantes. Incluir conjuntos pequeños y grandes permite identificar diferencias entre las estructuras que podrían no ser evidentes al evaluar un único tamaño, así como estudiar sus tendencias de crecimiento.
-- ### `REPETICIONES = 15`:
+- #### `REPETICIONES = 15`:
   Se realizan 15 repeticiones por cada combinación de tamaño (N) y orden de inserción porque los tiempos pueden variar entre ejecuciones debido a factores externos, como la actividad del sistema operativo. Las repeticiones permiten calcular promedios, lo que ayuda a distinguir tendencias consistentes de resultados aislados.
 - ### `ORDENES = ["aleatorio", "ordenado"]`:
   Se utilizan estos dos órdenes para estudiar cómo afecta la secuencia de inserción al rendimiento de cada estructura.
+
+## 4. Estadísticas
+
+## 4.1 `Graficar.py`
+
+Aquí se convierte los resultados crudos de los experimentos (archivos CSV) en las gráficas. No corre ningún experimento: solo lee los CSV que ya existen. Hace lo siguiente:
+
+1. Lee los CSV de `datos/`.
+2. Agrupa las repeticiones por combinación de **estructura, orden y N**.
+3. Calcula el **promedio** y la **desviación estándar** de cada combinación.
+4. Calcula la **pendiente log-log** de cada curva.
+5. Dibuja una gráfica por experimento y una de la altura de los árboles, y las guarda en
+   `graficas/`.
+
+## 4.2 Entradas y salidas
+
+**Entradas** (generadas por el script de experimentos):
+
+| Archivo | Experimento |
+|---|---|
+| `datos/e1_insercion.csv` | E1: inserción |
+| `datos/e2_busqueda.csv` | E2: búsqueda por ID |
+| `datos/e3_listado.csv` | E3: listado ascendente |
+| `datos/e5_rango.csv` | E5: búsqueda por rango |
+
+**Salidas** (carpeta `graficas/`):
+
+- `E1_Inserción.png`
+- `E2_Búsqueda_por_ID.png`
+- `E3_Listado_ascendente.png`
+- `E5_Búsqueda_por_rango.png`
+- `altura_vs_N.png`
+
+## Cómo se calcula cada cosa
+
+### Promedio y desviación estándar
+Para cada combinación (estructura, orden, N) se toman **todas** las repeticiones y se calcula su
+promedio y su desviación estándar. En las gráficas, el punto es el promedio y las barras
+y la franja sombreada son ±1 desviación estándar. 
+La desviación estándar permite visualizar la variabilidad experimental, que puede deberse a la carga de la máquina o a la planificación de procesos del sistema operativo.
+
+### Valores atípicos
+**No se descarta ninguna repetición.** Para cada combinación se aplica la regla de Tukey: una
+repetición se *marca* como atípica si queda fuera de `[Q1 − 1.5·IQR, Q3 + 1.5·IQR]`, donde Q1 y
+Q3 son el primer y el tercer cuartil e IQR = Q3 − Q1. Solo se cuenta cuántas hay y se imprime en
+consola, para poder reportarlo. Las repeticiones marcadas se mantienen en el promedio y la
+desviación. Porque puede que sean atípicos por interferencias del sistema o no, entonces se mantienen para mantener la objetividad. Además comprobé que las pendientes no cambian de forma relevante con o sin ellos.
+
+### Pendiente log-log
+Es la pendiente de la recta que mejor ajusta `log10(promedio)` contra `log10(N)`, calculada con
+`numpy.polyfit`. Si el tiempo sigue `T ≈ c · N^k`, la pendiente estima el exponente `k`
+Lo que ayuda a verificar si se cumple con la complejidad teórica o no.
+
+- **Ventana del ajuste:** solo se usan los puntos con `N ≥ 1000` (constante `N_MIN_AJUSTE`). Con N
+  pequeño el tiempo es de microsegundos y lo dominan costos fijos (llamadas, cronómetro, ruido),
+  no el algoritmo. Todos los puntos se dibujan igual en la gráfica. Solo se usa así para el cálculo de la pendiente.
+- La pendiente describe **cómo crece** el tiempo con N, no cuál estructura es más rápida. Eso lo
+  indica la altura de la curva.
+
+### Altura de los árboles
+Para el archivo del experimento E1 se promedia la altura de todas las repeticiones para cada `N` en cada orden de inserción La lista no aparece, porque no tiene altura.
+
+## 6. Cómo leer las gráficas
+
+- Cada figura tiene **dos paneles**: IDs en orden aleatorio (izquierda) e IDs en orden
+  ascendente (derecha).
+- Cada panel tiene una curva por estructura: **Lista** (rosa), **ABB** (morado) y **B+** (verde).
+- Los dos ejes están en **escala logarítmica**, siempre.
+- El eje Y está en **segundos**, salvo en la gráfica de altura, donde son **niveles del árbol**.
+- La leyenda muestra la pendiente de cada curva. El título de la leyenda recuerda que se calcula
+  con `N ≥ 1000`.
+
+## 9. Funciones del script
+
+- `cargar_datos`: lee los CSV que existan y los une en una sola tabla.
+- `contar_atipicos`: cuenta las repeticiones de una combinación marcadas por la regla de Tukey.
+- `agrupar`: calcula promedio, desviación y número de repeticiones por combinación, e imprime
+  cuántas repeticiones se marcaron como atípicas.
+- `agrupar_altura`: calcula promedio y desviación de la altura de los árboles.
+- `calcular_pendiente`: regresión log-log con los puntos de `N ≥ N_MIN_AJUSTE`.
+- `graficar_subplot`: dibuja un panel (un orden) con las curvas de las estructuras.
+- `hacer_figura`: arma la figura de dos paneles y la guarda como imagen.
+- `main`: encadena todo: carga, agrupa, grafica cada experimento y la altura.
+
+
+
+
+
+
+
+
   
 
   
