@@ -203,6 +203,14 @@ Es la pendiente de la recta que mejor ajusta `log10(promedio)` contra `log10(N)`
 `numpy.polyfit`. Si el tiempo sigue `T ≈ c · N^k`, la pendiente estima el exponente `k`
 Lo que ayuda a verificar si se cumple con la complejidad teórica o no.
 
+| Complejidad teórica | Comportamiento aproximado | Pendiente esperada |
+|---|---|---|
+| O(1) | Constante | 0 |
+| O(log N) | Logarítmico | Tiende a 0 (≈ 0.1 en N de 1000 a 30 000) |
+| O(N) | Lineal | 1 |
+| O(N log N) | Lineal-logarítmico | Tiende a 1 (≈ 1.1 en N de 1000 a 30 000) |
+| O(N²) | Cuadrático | 2 |
+
 - **Ventana del ajuste:** solo se usan los puntos con `N ≥ 1000` (constante `N_MIN_AJUSTE`). Con N
   pequeño el tiempo es de microsegundos y lo dominan costos fijos (llamadas, cronómetro, ruido),
   no el algoritmo. Todos los puntos se dibujan igual en la gráfica. Solo se usa así para el cálculo de la pendiente.
@@ -240,7 +248,7 @@ Para el archivo del experimento E1 se promedia la altura de todas las repeticion
 
 El panel izquierdo usa IDs en orden aleatorio y el derecho IDs en orden ascendente. Cada panel tiene una curva por estructura.
 En la inserción en orden aleatorio, se puede observar que:
-- La pendiente de la lista es **0.96**
+- La pendiente de la lista es **0.96** (esperado 1). Cada inserción es un `append`, que cuesta O(1), así que las N inserciones cuestan O(N). Por lo tanto, el resultado 
 
 
 
