@@ -71,7 +71,7 @@ def experimento_1_insercion(w):       # 'w' se utiliza para escribir los resulta
 
     for orden in ORDENES:        # Recorre los diferentes órdenes en los que se pueden generar los estudiantes
         for n in TAMANOS:        # Recorre los diferentes tamaños de datos que se pueden probar.
-            for rep in range(1, REPETICIONES + 1):  # Se repite el experimento con el mismo tamaño y orden de inserción 15 veces
+            for rep in range(1, REPETICIONES + 1):  # Se repite el experimento con el mismo tamaño y orden de inserción 20 veces
                 
                 estudiantes = generar_estudiantes(n, orden)      # Genera una nueva colección de N estudiantes.  # Los datos son los mismos que se utilizarán para probar todas las estructuras
 
@@ -121,7 +121,7 @@ def experimento_2_busqueda(w):
 
     for orden in ORDENES:     # Se recorren los diferentes órdenes en los que se pueden generar los estudiantes
         for n in TAMANOS:     # Se repite el experimento con los diferentes tamaños de estudiantes
-            for rep in range(1, REPETICIONES + 1):           # Se repite 15 veces cada experimento con los mismos n estudiantes y el mismo orden
+            for rep in range(1, REPETICIONES + 1):           # Se repite 20 veces cada experimento con los mismos n estudiantes y el mismo orden
                 estudiantes = generar_estudiantes(n, orden)  # Se generan los n estudiantes utilizando el orden actual
                 ids_a_buscar = generar_busquedas(estudiantes, NUM_BUSQUEDAS_INDIVDUALES)     # Se generan los M = 1000 ids a buscar con la función generar busquedas dentro de los estudiantes generados
 
@@ -175,7 +175,7 @@ def experimento_3_listado(w):
 
     for orden in ORDENES:    # Se recorren los diferentes órdenes en los que se pueden generar los estudiantes
         for n in TAMANOS:    # Se repite el experimento con los diferentes tamaños de estudiantes
-            for rep in range(1, REPETICIONES + 1):             # Se repite 15 veces cada experimento con los mismos n estudiantes y el mismo orden
+            for rep in range(1, REPETICIONES + 1):             # Se repite 20 veces cada experimento con los mismos n estudiantes y el mismo orden
                 estudiantes = generar_estudiantes(n, orden)    # Se generan los estudiantes en el orden correspondiente
 
                 for estr, (construir, listar) in estructuras.items():     # Probamos el listado en cada una de las estructuras recorriendo el diccionario 
@@ -232,7 +232,7 @@ def experimento_5_rango(w):
         for n in TAMANOS:          # Se prueban también todos los tamaños de estudiantes
             if n < TAMANO_RANGO:   # Se verifica que el rango de estudiantes (100) sea menor que el número de estudiantes total para que sea posible buscarlos. 
                 continue           # Si n es menor, se prueba con con otro tamaño
-            for rep in range(1, REPETICIONES + 1):            # Para cada combinación se hace 15 repeticiones
+            for rep in range(1, REPETICIONES + 1):            # Para cada combinación se hace 20 repeticiones
                 estudiantes = generar_estudiantes(n, orden)   # Se generan los estudiantes según el orden 
                 rangos = generar_rangos(n, NUMERO_DE_RANGOS, TAMANO_RANGO)    # Se generan 1000 rangos de 100 estudiantes, que serán los mismos para las 3 estructuras para que sea justo
 
