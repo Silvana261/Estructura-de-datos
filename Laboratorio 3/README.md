@@ -206,9 +206,9 @@ Lo que ayuda a verificar si se cumple con la complejidad teórica o no.
 | Complejidad teórica | Comportamiento aproximado | Pendiente esperada |
 |---|---|---|
 | O(1) | Constante | 0 |
-| O(log N) | Logarítmico | Tiende a 0 (≈ 0.1 en N de 1000 a 30 000) |
+| O(log N) | Logarítmico | Tiende a 0 |
 | O(N) | Lineal | 1 |
-| O(N log N) | Lineal-logarítmico | Tiende a 1 (≈ 1.1 en N de 1000 a 30 000) |
+| O(N log N) | Lineal-logarítmico | ≈ 1.1  |
 | O(N²) | Cuadrático | 2 |
 
 - **Ventana del ajuste:** solo se usan los puntos con `N ≥ 1000` (constante `N_MIN_AJUSTE`). Con N
@@ -248,7 +248,8 @@ Para el archivo del experimento E1 se promedia la altura de todas las repeticion
 
 El panel izquierdo usa IDs en orden aleatorio y el derecho IDs en orden ascendente. Cada panel tiene una curva por estructura.
 En la inserción en orden aleatorio, se puede observar que:
-- La pendiente de la lista es **0.96** (esperado 1). Cada inserción es un `append`, que cuesta O(1), así que las N inserciones cuestan O(N). Por lo tanto, el resultado 
+- La pendiente de la lista es **0.96** (esperado 1). Cada inserción es un `append`, que cuesta O(1), pero aquí se insertan N estudiantes, así que el tiempo total sí crece con N: si se duplica N, se duplica el tiempo. Por eso la pendiente es cercana de 1 y no 0 y tiene un comportamiento lineal.
+- La pendiente del ABB es **1.22** (esperado ≈ 1.1) Cada inserción baja por el árbol comparando IDs, y eso cuesta O(log N). Con N inserciones, el total es O(N log N).
 
 
 
