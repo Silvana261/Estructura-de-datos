@@ -53,7 +53,7 @@ las operaciones son iterativas (sin recursión). Ya que python tiene un límite 
   - IDs ascendentes: O(N)
 - **Altura:** recorrido por niveles (la raíz es el nivel 1). Cuesta O(N) calcularla.
   - IDs aleatorios: O(log N)
-  - IDs ascendentes: N
+  - IDs ascendentes: O(N)
 
 ### 2.3 Árbol B+ (`ArbolBMas.py`)
 
@@ -247,20 +247,59 @@ Para el archivo del experimento E1 se promedia la altura de todas las repeticion
 <img width="2100" height="900" alt="image" src="https://github.com/user-attachments/assets/975c18b4-3523-4eda-bb97-cd47060ddca7" />
 
 El panel izquierdo usa IDs en orden aleatorio y el derecho IDs en orden ascendente. Cada panel tiene una curva por estructura.
+
 **En la inserción en orden aleatorio, se puede observar que:**
+
 - La pendiente de la lista es **1.01** (esperado 1). Cada inserción es un `append`, que cuesta O(1), pero aquí se insertan N estudiantes, así que el tiempo total sí crece con N: si se duplica N, se duplica el tiempo. Por eso la pendiente es cercana de 1 y no 0 y tiene un comportamiento lineal.
+
 - La pendiente del ABB es **1.22** (esperado ≈ 1.1) Cada inserción en este árbol es O(log(N)) y con N inserciones, el total es O(Nlog(N)). Por lo que el valor obtenido se aproxima a lo esperado en en el comportamiento.
+  
 - La pendiente obtenida en el B+ es **1.15** (esperada ≈ 1.1) Al igual al anterior se espera una complejidad O(Nlog(N)) y la pendiente obtenida se aproxima a la esperada.
 
 En cuanto a eficiencia, al insertar los IDs aleatoriamente la estructura más rápida (con la curva más baja) es la **Lista** porque se hace solo con append. El árbol **ABB** es un poco más rápido que el **B+** porque el B+ trabaja más en cada inserción, ya que busca dentro del nodo, y cuando lo inserta y enlaza con los demás estudiantes y a veces debe dividir las hojas.
 
 **En la inserción en orden, se puede observar que:**
+
 - La pendiente de la lista es **1** que es igual al esperado para que la complejidad sea compatible con la lineal O(N). Aquí también se hace la misma operación de la inserción en orden aleatorio, la diferencia de pendientes pudo haber ocurrido por ruido experimental, pero la diferencia no es significativa en la complejidad algorítmica.
+  
 - La pendiente en el ABB es **2.09** (esperada 2). Aquí se espera que la complejidad sea cuadrática porque al insertar en orden el árbol se degenera y termina como una lista enlazada y cada inserción tiene que recorrer todo lo que ya hay.
+  
 - La pendiente en el B+ es **1.20** (esperada 1.1) aquí se esperaba también una complejidad de O(Nlog(N)) porque el orden de entrada no degrada la estructura porque cuando un nodo se llena, se divide y el árbol crece hacia arriba y gracias a eso suele tener entre 3 a 4 niveles; además, el grado de los nodos es de 50 para que no se tenga que dividir tanto los nodos, lo que evita que el árbol crezca como lista como el ABB.
 
 En cuanto a eficiencia, la lista sigue siendo la más eficiente, ya que es la estructura más simple y barata para insertar, pero en este caso, el árbol **B+** es más eficiente que el árbol **ABB** porque este se vuelve cuadrático y mientras crezca N se vuelve más lento, en cambio el B+ no es muy afectado por el orden de inserción.
 
+En conclusión, insertar en una lista es lo más barato.
+
+### E2: Búsqueda por ID
+<img width="2100" height="900" alt="image" src="https://github.com/user-attachments/assets/76a0e312-88a9-455a-9a8c-fd7e0e146bff" />
+
+El panel izquierdo usa IDs en orden aleatorio y el derecho IDs en orden ascendente. Cada panel tiene una curva por estructura.
+
+**En la búsqueda con IDs con inserción aleatoria, se puede observar que:**
+
+- La pendiente de la lista es **1.08** (esperada  1). Para encontrar un estudiante la lista lo busca uno por uno desde el inicio, cada búsqueda cuesta O(N) entonces todas las M búsquedas cuestan **O(M*N)**. Como M es fijo, el tiempo crece al mismo ritmo que N y es lineal. La pendiente encontrada estuvo aproximada la complejidad real.
+  
+- La pendiente del ABB es **0.23** (esperada ≈ 0.1 a 0.14). Cada búsqueda cuesta O(log(N)). al ser **M** búsquedas, termina siendo O(Mlog(N)) pero como M es constante, se puede ignorar y el costo sigue siendo logarítmico. El valor de la pendiente queda por encima de lo esperado porque en el último punto crece más rápido de lo normal.
+  
+- La pendiente del B+ es **0.16** ( esperada ≈ 0.1 a 0.14). También cuesta O(log(N)) como el árbol anterior y la pendiente obtenida se acerca a lo esperado.
+
+En cuanto a la eficiencia, con IDs aleatorios las dos estructuras en árbol son mucho más rápidas que la lista cuando N crece. El **ABB** es la estructura más rápida y el **B+** un poco menos rápido. Aunque los dos tienen el mismo costo computacional, el B+ trabaja más en cada búsqueda porque recorre las claves de cada nodo linealmente para encontrar la rama por la que debe bajar. 
+
+
+**En la búsqueda con IDs con inserción en orden ascendente, se puede observar que:**
+
+- La pendiente de la lista es **1.04** (esperada 1). Es el mismo algoritmo que en aleatorio, y
+  el orden en que se insertaron los estudiantes no cambia el recorrido, así que su
+  comportamiento es lineal.
+  
+-  La pendiente del ABB es **1.04** (esperada 1). Como con IDs ascendentes el árbol queda como una lista enlazada y buscar un estudiante obliga a recorrer  la cadena, así que la búsqueda deja de ser O(log N) y pasa a ser O(N). La pendiente pasó de 0.23 en aleatorio a 1.04 en ascendente.
+
+- La pendiente del B+ es **0.13** (esperada ≈ 0.1 a 0.14). Es casi igual que en aleatorio: como
+  el B+ se mantiene balanceado, el orden de inserción no le afecta.
+
+En cuanto a eficiencia, con IDs ascendentes el **B+** es claramente el mejor.  El **ABB** pasa a ser el peor, incluso más lento que la lista. Aunque ambos son lineales, recorrer nodos enlazados por punteros cuesta más que recorrer un arreglo.
+
+En conclusión, la lista es la peor en cuanto a tiempo para realizar las búsquedas. Los árboles solo son mejores sino se degeneran. Además, el ABB es la mejor opción para buscar, pero solo con IDs en orden aleatorio al insertarlos porque si se insertan en orden, se vuelve peor que la lista. Y por último, el B+ es el más estable, ya que la curva no cambia casi nada con el orden y el tiempo de respuesta es muy bueno.
 
 
 
