@@ -148,12 +148,12 @@ Dentro de esta, se pone la función y se le pasan los argumentos necesarios de l
   Se utilizan tamaños crecientes para observar cómo cambia el rendimiento a medida que aumenta la cantidad de estudiantes. Incluir conjuntos pequeños y grandes permite identificar diferencias entre las estructuras que podrían no ser evidentes al evaluar un único tamaño, así como estudiar sus tendencias de crecimiento.
 - #### `REPETICIONES = 15`:
   Se realizan 15 repeticiones por cada combinación de tamaño (N) y orden de inserción porque los tiempos pueden variar entre ejecuciones debido a factores externos, como la actividad del sistema operativo. Las repeticiones permiten calcular promedios, lo que ayuda a distinguir tendencias consistentes de resultados aislados.
-- ### `ORDENES = ["aleatorio", "ordenado"]`:
+- #### `ORDENES = ["aleatorio", "ordenado"]`:
   Se utilizan estos dos órdenes para estudiar cómo afecta la secuencia de inserción al rendimiento de cada estructura.
 
 ## 4. Estadísticas
 
-## 4.1 `Graficar.py`
+## `Graficar.py`
 
 Aquí se convierte los resultados crudos de los experimentos (archivos CSV) en las gráficas. No corre ningún experimento: solo lee los CSV que ya existen. Hace lo siguiente:
 
@@ -164,7 +164,7 @@ Aquí se convierte los resultados crudos de los experimentos (archivos CSV) en l
 5. Dibuja una gráfica por experimento y una de la altura de los árboles, y las guarda en
    `graficas/`.
 
-## 4.2 Entradas y salidas
+## Entradas y salidas
 
 **Entradas** (generadas por el script de experimentos):
 
@@ -210,9 +210,9 @@ Lo que ayuda a verificar si se cumple con la complejidad teórica o no.
   indica la altura de la curva.
 
 ### Altura de los árboles
-Para el archivo del experimento E1 se promedia la altura de todas las repeticiones para cada `N` en cada orden de inserción La lista no aparece, porque no tiene altura.
+Para el archivo del experimento E1 se promedia la altura de todas las repeticiones para cada `N` en cada orden de inserción. La lista no aparece, porque no tiene altura.
 
-## 6. Cómo leer las gráficas
+## Cómo leer las gráficas
 
 - Cada figura tiene **dos paneles**: IDs en orden aleatorio (izquierda) e IDs en orden
   ascendente (derecha).
@@ -222,7 +222,7 @@ Para el archivo del experimento E1 se promedia la altura de todas las repeticion
 - La leyenda muestra la pendiente de cada curva. El título de la leyenda recuerda que se calcula
   con `N ≥ 1000`.
 
-## 9. Funciones del script
+## Funciones de Gráficas
 
 - `cargar_datos`: lee los CSV que existan y los une en una sola tabla.
 - `contar_atipicos`: cuenta las repeticiones de una combinación marcadas por la regla de Tukey.
@@ -233,6 +233,10 @@ Para el archivo del experimento E1 se promedia la altura de todas las repeticion
 - `graficar_subplot`: dibuja un panel (un orden) con las curvas de las estructuras.
 - `hacer_figura`: arma la figura de dos paneles y la guarda como imagen.
 - `main`: encadena todo: carga, agrupa, grafica cada experimento y la altura.
+
+## Análisis de los resultados
+
+![E1 Inserción](graficas/E1_Inserción.png)
 
 
 
