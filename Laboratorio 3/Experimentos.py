@@ -17,7 +17,7 @@ TAMANO_RANGO = 100         # Número de estudiantes que devuelve cada búsqueda 
 
 TAMANOS = [10, 25, 50, 100, 300, 1000, 2000, 5000, 10000, 20000, 30000]  # número de estudiantes con los que corre el experimento
 
-REPETICIONES = 15                                           # Número de repeticiones por experimento
+REPETICIONES = 20                                           # Número de repeticiones por experimento
 
 ORDENES = ["aleatorio", "ordenado"]   # El orden en el que pueden estar insertados los daatos
 
@@ -262,10 +262,10 @@ def main():
     inicio = datetime.now()
     print(f"Inicio del experimento: {inicio:%Y-%m-%d %H:%M:%S}\n")
 
-    correr("e1_insercion", experimento_1_insercion, COLUMNAS)
-    correr("e2_busqueda", experimento_2_busqueda, COLUMNAS)
+    #correr("e1_insercion", experimento_1_insercion, COLUMNAS)
+    #correr("e2_busqueda", experimento_2_busqueda, COLUMNAS)
     correr("e3_listado", experimento_3_listado, COLUMNAS)
-    correr("e5_rango", experimento_5_rango, COLUMNAS_RANGO)     # Se utiliza COLUMNAS_RANGO porque este experimento tiene información adicional relacionada con los rangos.
+    #correr("e5_rango", experimento_5_rango, COLUMNAS_RANGO)     # Se utiliza COLUMNAS_RANGO porque este experimento tiene información adicional relacionada con los rangos.
 
     fin = datetime.now()
     print(f"Fin del experimento: {fin:%Y-%m-%d %H:%M:%S}")
