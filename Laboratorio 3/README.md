@@ -14,7 +14,7 @@ Además de estas tres operaciones se evaluó la búsqueda por rango de IDs.
 ### Objetivo
 Estudiar experimentalmente cómo la estrategia de almacenamiento y búsqueda afecta el tiempo
 de ejecución a medida que aumenta el tamaño de los datos (N). Se comparan tres estructuras:
-**lista**, **árbol binario de búsqueda (ABB)** y **árbol B+**, y se contrastan los resultados
+**lista**, **árbol ABB** y **árbol B+**, y se contrastan los resultados
 con la complejidad teórica. Las conclusiones se sustentan en mediciones y análisis estadístico.
 
 ## 2. Estructuras de datos y algoritmos
@@ -107,19 +107,19 @@ Para generar los rangos, lo hace escogiendo aleatoriamente el ID de inicio verif
 ## 3. Diseño experimental (`experimentos.py`)
 
 ### 3.1 Metodología de los experimentos
-En todos los experimentos se busca evaluar y comparar el rendimiento de las estructuras de datos (Lista, ABB y árbol B+) al variar el número de estudiantes (N) y el orden de inserción. Para que la comparación sea válida, se mantienen constantes los demás parámetros de cada experimento, como la cantidad de búsquedas o consultas realizadas y el tamaño de los rangos consultados. Para cada combinación de (N) y orden de inserción se realizan 15 repeticiones, con el fin de obtener resultados más representativos y reducir la influencia de variaciones puntuales en los tiempos de ejecución. La función de cada experimento se describe a continuación:
+En todos los experimentos se busca evaluar y comparar el rendimiento de las estructuras de datos (Lista, ABB y árbol B+) al variar el número de estudiantes (N) y el orden de inserción. Para que la comparación sea válida, se mantienen constantes los demás parámetros de cada experimento, como la cantidad de búsquedas o consultas realizadas y el tamaño de los rangos consultados. Para cada combinación de (N) y orden de inserción se realizan 20 repeticiones, con el fin de obtener resultados más representativos y reducir la influencia de variaciones puntuales en los tiempos de ejecución. La función de cada experimento se describe a continuación:
 
 *  ###  E1  (`experimento_1_insercion`)
 Se insertan N estudiantes, uno por uno, en cada estructura inicialmente vacía. La inserción se
 hace con IDs aleatorios y con IDs en orden ascendente, para comparar el rendimiento de cada
 estructura al cambiar el orden de inserción. Se cronometra el tiempo de insertar los N
-estudiantes completos. Se realizan 15 repeticiones por cada combinación de `N` y orden de inserción.
+estudiantes completos. Se realizan 20 repeticiones por cada combinación de `N` y orden de inserción.
 
 * ### E2 (`experimento_2_busqueda`)
-Sobre cada estructura ya construida con `N` estudiantes, se buscan `M = 1000` ids escogidos con la función `generar_busquedas`. Este experimento se hace tanto en la estructura construida con inserción aleatoria y en orden. Se evalúa cómo varía el rendimiento de las búsquedas al aumentar (N) y el orden de inserción, manteniendo constante la cantidad de búsquedas. Se cronometra únicamente el tiempo total de las (M) búsquedas; el tiempo de construcción de la estructura no se incluye. Se realizan 15 repeticiones por cada combinación de (N) y orden de inserción. 
+Sobre cada estructura ya construida con `N` estudiantes, se buscan `M = 1000` ids escogidos con la función `generar_busquedas`. Este experimento se hace tanto en la estructura construida con inserción aleatoria y en orden. Se evalúa cómo varía el rendimiento de las búsquedas al aumentar (N) y el orden de inserción, manteniendo constante la cantidad de búsquedas. Se cronometra únicamente el tiempo total de las (M) búsquedas; el tiempo de construcción de la estructura no se incluye. Se realizan 20 repeticiones por cada combinación de (N) y orden de inserción. 
 
 * ### E3 (`experimento_3_listado`)
-Sobre cada estructura ya construida con (N) estudiantes, se obtiene la secuencia completa de estudiantes ordenada por ID, tanto para estructuras construidas con IDs aleatorios como con IDs en orden ascendente. Se quiere evaluar cómo influye el orden de inserción y el aumento de `N` en el rendimiento del listado ordenado. Se cronometra únicamente la operación de listado; el tiempo de construcción de la estructura no se incluye. Se realizan 15 repeticiones por cada combinación de (N) y orden de inserción.
+Sobre cada estructura ya construida con (N) estudiantes, se obtiene la secuencia completa de estudiantes ordenada por ID, tanto para estructuras construidas con IDs aleatorios como con IDs en orden ascendente. Se quiere evaluar cómo influye el orden de inserción y el aumento de `N` en el rendimiento del listado ordenado. Se cronometra únicamente la operación de listado; el tiempo de construcción de la estructura no se incluye. Se realizan 20 repeticiones por cada combinación de (N) y orden de inserción.
 
 * ### E4 (`altura`)
 No tiene una función propia, sino que la gráfica sale a partir de el CSV de `E1`
@@ -146,8 +146,8 @@ Dentro de esta, se pone la función y se le pasan los argumentos necesarios de l
   Cada consulta devuelve exactamente 100 estudiantes para que todas las estructuras procesen la misma cantidad de resultados por consulta. Así, las diferencias de tiempo se relacionan principalmente con la forma en que cada estructura busca y recorre los datos, y no con que una tenga que devolver más estudiantes que otra.
 - #### `TAMANOS = [10, 25, 50, 100, 300, 1000, 2000, 5000, 10000, 20000, 30000]`:
   Se utilizan tamaños crecientes para observar cómo cambia el rendimiento a medida que aumenta la cantidad de estudiantes. Incluir conjuntos pequeños y grandes permite identificar diferencias entre las estructuras que podrían no ser evidentes al evaluar un único tamaño, así como estudiar sus tendencias de crecimiento.
-- #### `REPETICIONES = 15`:
-  Se realizan 15 repeticiones por cada combinación de tamaño (N) y orden de inserción porque los tiempos pueden variar entre ejecuciones debido a factores externos, como la actividad del sistema operativo. Las repeticiones permiten calcular promedios, lo que ayuda a distinguir tendencias consistentes de resultados aislados.
+- #### `REPETICIONES = 20`:
+  Se realizan 20 repeticiones por cada combinación de tamaño (N) y orden de inserción porque los tiempos pueden variar entre ejecuciones debido a factores externos, como la actividad del sistema operativo. Las repeticiones permiten calcular promedios, lo que ayuda a distinguir tendencias consistentes de resultados aislados.
 - #### `ORDENES = ["aleatorio", "ordenado"]`:
   Se utilizan estos dos órdenes para estudiar cómo afecta la secuencia de inserción al rendimiento de cada estructura.
 
