@@ -247,10 +247,19 @@ Para el archivo del experimento E1 se promedia la altura de todas las repeticion
 <img width="2100" height="900" alt="image" src="https://github.com/user-attachments/assets/975c18b4-3523-4eda-bb97-cd47060ddca7" />
 
 El panel izquierdo usa IDs en orden aleatorio y el derecho IDs en orden ascendente. Cada panel tiene una curva por estructura.
-En la inserción en orden aleatorio, se puede observar que:
-- La pendiente de la lista es **0.96** (esperado 1). Cada inserción es un `append`, que cuesta O(1), pero aquí se insertan N estudiantes, así que el tiempo total sí crece con N: si se duplica N, se duplica el tiempo. Por eso la pendiente es cercana de 1 y no 0 y tiene un comportamiento lineal.
-- La pendiente del ABB es **1.22** (esperado ≈ 1.1) Cada inserción baja por el árbol comparando IDs, y eso cuesta O(log N). Con N inserciones, el total es O(N log N).
+**En la inserción en orden aleatorio, se puede observar que:**
+- La pendiente de la lista es **1.01** (esperado 1). Cada inserción es un `append`, que cuesta O(1), pero aquí se insertan N estudiantes, así que el tiempo total sí crece con N: si se duplica N, se duplica el tiempo. Por eso la pendiente es cercana de 1 y no 0 y tiene un comportamiento lineal.
+- La pendiente del ABB es **1.22** (esperado ≈ 1.1) Cada inserción en este árbol es O(log(N)) y con N inserciones, el total es O(Nlog(N)). Por lo que el valor obtenido se aproxima a lo esperado en en el comportamiento.
+- La pendiente obtenida en el B+ es **1.15** (esperada ≈ 1.1) Al igual al anterior se espera una complejidad O(Nlog(N)) y la pendiente obtenida se aproxima a la esperada.
 
+En cuanto a eficiencia, al insertar los IDs aleatoriamente la estructura más rápida (con la curva más baja) es la **Lista** porque se hace solo con append. El árbol **ABB** es un poco más rápido que el **B+** porque el B+ trabaja más en cada inserción, ya que busca dentro del nodo, y cuando lo inserta y enlaza con los demás estudiantes y a veces debe dividir las hojas.
+
+**En la inserción en orden, se puede observar que:**
+- La pendiente de la lista es **1** que es igual al esperado para que la complejidad sea compatible con la lineal O(N). Aquí también se hace la misma operación de la inserción en orden aleatorio, la diferencia de pendientes pudo haber ocurrido por ruido experimental, pero la diferencia no es significativa en la complejidad algorítmica.
+- La pendiente en el ABB es **2.09** (esperada 2). Aquí se espera que la complejidad sea cuadrática porque al insertar en orden el árbol se degenera y termina como una lista enlazada y cada inserción tiene que recorrer todo lo que ya hay.
+- La pendiente en el B+ es **1.20** (esperada 1.1) aquí se esperaba también una complejidad de O(Nlog(N)) porque el orden de entrada no degrada la estructura porque cuando un nodo se llena, se divide y el árbol crece hacia arriba y gracias a eso suele tener entre 3 a 4 niveles; además, el grado de los nodos es de 50 para que no se tenga que dividir tanto los nodos, lo que evita que el árbol crezca como lista como el ABB.
+
+En cuanto a eficiencia, la lista sigue siendo la más eficiente, ya que es la estructura más simple y barata para insertar, pero en este caso, el árbol **B+** es más eficiente que el árbol **ABB** porque este se vuelve cuadrático y mientras crezca N se vuelve más lento, en cambio el B+ no es muy afectado por el orden de inserción.
 
 
 
