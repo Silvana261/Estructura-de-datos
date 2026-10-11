@@ -235,8 +235,13 @@ Para el archivo del experimento E1 se promedia la altura de todas las repeticion
 - `main`: encadena todo: carga, agrupa, grafica cada experimento y la altura.
 
 ## Análisis de los resultados
+### E1: Inserción
+<img width="2100" height="900" alt="image" src="https://github.com/user-attachments/assets/975c18b4-3523-4eda-bb97-cd47060ddca7" />
 
-![E1 Inserción](graficas/E1_Inserción.png)
+El panel izquierdo usa IDs en orden aleatorio y el derecho IDs en orden ascendente. Cada panel tiene una curva por estructura.
+En la inserción en orden aleatorio, se puede observar que:
+- La pendiente de la lista es **0.96**
+
 
 
 
