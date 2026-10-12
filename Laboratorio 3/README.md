@@ -242,7 +242,7 @@ Para el archivo del experimento E1 se promedia la altura de todas las repeticion
 - `hacer_figura`: arma la figura de dos paneles y la guarda como imagen.
 - `main`: encadena todo: carga, agrupa, grafica cada experimento y la altura.
 
-## Análisis de los resultados
+## 5. Análisis de los resultados
 ### E1: Inserción
 <img width="2100" height="900" alt="image" src="https://github.com/user-attachments/assets/975c18b4-3523-4eda-bb97-cd47060ddca7" />
 
@@ -405,3 +405,131 @@ cuesta más que recorrer un arreglo.
 En conclusión, con IDs aleatorios, los árboles hacen la búsqueda por rango casi sin depender de N, solo que el B+ es el más rápido porque no tiene que subir y bajar varias veces. 
 Con los IDs ascendentes, el ABB deja de ser logarítmico y pasa a ser peor que la lista en tiempo. El B+ no cambia.
 De todos los experimentos, este es donde el B+ da más ventaja, ya que sus hojas enlazadas permiten recoger rangos en muy poco tiempo y no depende del orden de inserción.
+
+### Conteo de datos atípicos del experimento
+<img width="693" height="217" alt="image" src="https://github.com/user-attachments/assets/5f86ad21-3908-4419-8379-671ee09e30a2" />
+
+## 6. Limitaciones
+
+- **No se determinó la causa de los puntos atípicos o elevados.** Algunos puntos quedan por encima
+  de la tendencia, con barras de error grandes. Posibles causas son procesos del sistema o el uso de memoria, pero ninguna se comprobó. Cómo los atípicos se conservaron afectan los promedios de las gráficas.
+
+- **Hay ruido del sistema.** Las mediciones se hicieron en un computador de uso normal, con otros
+  procesos activos y sin control. Por eso las pendientes medidas se desvían un poco de las esperadas, pero como son desviaciones pequeñas, no se interpretan como cambios de complejidad.
+
+- **M, Q y K son fijos.** Todos los resultados valen para M = 1000 búsquedas, Q = 1000 consultas y
+  rangos de K = 100 estudiantes. En E5, como K = 100 pesa mucho más que log N, las curvas de los
+  árboles salen casi planas. Con otro valor de K podrían verse distintas.
+
+- **Las estructuras se miden siempre en el mismo orden** dentro de cada repetición (lista, ABB, B+).
+  Si algún efecto del sistema (memoria, caché) favorece o perjudica a la primera o a la última,
+  siempre afectaría a la misma estructura. No se evaluó este efecto.
+
+## 7. Entorno de ejecución
+
+### 7.1 Hardware
+
+- **Procesador:** 12th Gen Intel Core i5-1240P, con 12 núcleos y 16 procesadores lógicos
+  (frecuencia base de 1.7 GHz según Windows).
+- **Memoria RAM:** 7.7 GB disponibles para el sistema.
+- **Equipo:** [portátil]
+
+### 7.2 Software
+
+- **Sistema operativo:** Microsoft Windows 11 Pro, versión 10.0.26200.
+- **Python:** 3.13.2 (CPython, 64 bits).
+- **Librerías:**
+  - `pandas` 3.0.5
+  - `numpy` 2.3.1
+  - `matplotlib` 3.10.7
+- **Librerías estándar usadas en los experimentos:** `time`, `gc`, `csv`, `random`, `os`,
+  `datetime`.
+
+### 7.3 Condiciones de la ejecución
+
+- **Fecha de la corrida:** [2026-10-08]
+- **Duración total:** [la de la corrida final; la de 20 repeticiones fue 37 min 12 s]
+- **Estado del equipo:** [conectado a la corriente y sin programas abiertos]
+- **Cronómetro:** `time.perf_counter()`, con el recolector de basura desactivado durante cada
+  medición.
+
+## 8. Cómo repetir los experimentos
+
+### 8.1 Requisitos
+
+- Python 3.13 o similar (se usó 3.13.2, CPython de 64 bits).
+- Las librerías `pandas`, `numpy` y `matplotlib` (se usaron las versiones 3.0.5, 2.3.1 y 3.10.7).
+  Los experimentos solo usan la biblioteca estándar de Python. Las librerías externas se
+  necesitan únicamente para generar las gráficas.
+
+```bash
+pip install pandas numpy matplotlib
+```
+
+### 8.2 Archivos necesarios
+
+Estos archivos deben estar en la **misma carpeta**, porque se importan entre sí:
+
+- `Experimentos.py`
+- `Lista.py`
+- `ArbolABB.py`
+- `ArbolBMas.py`
+- `GenerarDatos.py`
+- `Graficar.py`
+
+### 8.3 Pasos
+
+1. **Descargar el proyecto** y abrir una terminal en su carpeta. Es importante ejecutar desde
+   ahí, porque las rutas de `datos/` y `graficas/` son relativas a la carpeta actual.
+
+2. **Correr los experimentos:**
+
+```bash
+   python Experimentos.py
+```
+
+   - Crea la carpeta `datos/` si no existe y guarda cuatro archivos: `e1_insercion.csv`,
+     `e2_busqueda.csv`, `e3_listado.csv` y `e5_rango.csv`.
+   - Imprime el progreso, la hora de inicio, la hora de fin y la duración total.
+   - Con los parámetros actuales, la corrida con 15 repeticiones tardó 25 minutos y 12 segundos
+     en el equipo descrito en la sección 4. El tiempo exacto depende del computador.
+   - La parte más lenta es el ABB con IDs ascendentes, porque su inserción es cuadrática.
+   - Mientras corre conviene no usar el computador, tenerlo conectado a la corriente y cerrar
+     otros programas, para reducir el ruido en los tiempos.
+
+3. **Generar las gráficas:**
+
+```bash
+   python Graficar.py
+```
+
+   - Lee los CSV de `datos/`, calcula el promedio, la desviación estándar y las pendientes, y
+     guarda cinco imágenes en `graficas/`: `E1_Inserción.png`, `E2_Búsqueda_por_ID.png`,
+     `E3_Listado_ascendente.png`, `E5_Búsqueda_por_rango.png` y `altura_vs_N.png`.
+   - Imprime cuántas repeticiones se marcaron como atípicas en cada experimento.
+   - Tarda unos segundos y no vuelve a correr los experimentos.
+
+### 8.4 Reproducir solo las gráficas
+
+Los CSV de `datos/` están incluidos en el repositorio. Para ver las gráficas sin correr los
+experimentos (que tardan casi media hora), basta ejecutar el paso 3. Las imágenes finales también
+están en `graficas/`.
+
+## 9. Código de honor y uso de herramientas de IA
+
+### Para qué se usó
+
+- **Comprender conceptos:**
+  - La desviación estándar y qué mide.
+  - La regla de Tukey para marcar valores atípicos.
+  - Las escalas log-log y cómo interpretar la pendiente de una curva.
+- **Código de las gráficas:** el script `Graficar.py` (agrupación de repeticiones, cálculo de
+  promedio y desviación estándar, pendiente log-log y dibujo de las gráficas) se desarrolló con
+  ayuda de la IA.
+- **Mejorar el diseño experimental:** la IA ayudó a pulir los experimentos y a corregir la
+  metodología. Por ejemplo, sugirió que los tamaños de N debían crecer con grandes espcaciados para poder ver cómo crece el tiempo, y que la pendiente
+  debía calcularse solo con los N grandes.
+- **Redacción:** ayuda para redactar este README y para corregir la gramática.
+- **Comandos de verificación:** los comandos usados para consultar las versiones de Python, de las
+  librerías y las características del equipo (sección 4).
+- **Corregir código:** La IA me ayudó a corregir y comprender la implementación del árbol B+, porque se me dificultó entender cómo funcionaba y cómo se debía implementar. También cuando estaba haciendo las estructuras con recursión, me sugirió hacerlo de manera iterativa por el límite de recursión en python.
