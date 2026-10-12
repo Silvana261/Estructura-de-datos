@@ -299,11 +299,39 @@ En cuanto a la eficiencia, con IDs aleatorios las dos estructuras en árbol son 
 
 En cuanto a eficiencia, con IDs ascendentes el **B+** es claramente el mejor.  El **ABB** pasa a ser el peor, incluso más lento que la lista. Aunque ambos son lineales, recorrer nodos enlazados por punteros cuesta más que recorrer un arreglo.
 
-En conclusión, la lista es la peor en cuanto a tiempo para realizar las búsquedas. Los árboles solo son mejores sino se degeneran. Además, el ABB es la mejor opción para buscar, pero solo con IDs en orden aleatorio al insertarlos porque si se insertan en orden, se vuelve peor que la lista. Y por último, el B+ es el más estable, ya que la curva no cambia casi nada con el orden y el tiempo de respuesta es muy bueno.
+En conclusión, la lista es la peor en cuanto a tiempo para realizar las búsquedas. Los árboles solo son mejores si no se degeneran. Además, el ABB es la mejor opción para buscar, pero solo con IDs en orden aleatorio al insertarlos porque si se insertan en orden, se vuelve peor que la lista. Y por último, el B+ es el más estable, ya que la curva no cambia casi nada con el orden y el tiempo de respuesta es muy bueno.
 
 
+### 6.3 E3: Listado ascendente
 
+<img width="2100" height="900" alt="image" src="https://github.com/user-attachments/assets/6a9f9def-321e-4b7a-9f14-1af37835ce0e" />
 
+El panel izquierdo usa IDs en orden aleatorio y el derecho IDs en orden ascendente. Cada panel tiene una curva por estructura.
+
+**En el listado con IDs en orden aleatorio, se puede observar que:**
+
+- La pendiente de la lista es **1.16** (esperada 1.1). Para listar, la lista se ordena primero con `sort()` y con datos desordenados cuesta 0(Nlog(N)). Por eso es la pendiente más alta.
+
+-  La pendiente del ABB es **1.08** (esperada  1). El árbol El árbol ya guarda los estudiantes en orden, por lo que solo hay que recorrer los N nodos, lo que cuesta O(N)
+
+-  La pendiente del B+ es **1.08** (esperada 1). También recorre los N estudiantes una vez, por
+  las hojas enlazadas, y cuesta O(N).
+
+En cuanto a la eficiencia, con IDs aleatorios la estructura más rápida es el **B+**, seguida del **ABB** y luego la **Lista** que es la más lenta porque es la única que tiene que ordenar. El B+ es más rápido que el ABB porque los estudiantes están enlazados y puede saltar entre ellos, mientras que el ABB tiene que subir y bajar varias veces entre nodos.
+
+**En el listado con IDs en orden ascendente, se puede observar que:**
+
+- La pendiente de la lista es **1.04** (esperada 1). Aquí los estudiantes ya están ordenados y sort() de python lo detecta, así que el costo baja a ser lineal.
+  
+- La pendiente del ABB es **0.95** ( esperada 1). El árbol está degenerado pero para listar todos los estudiantes no necesita buscar, solo recorrer los N nodos, así que sigue siendo lineal su costo.
+  
+- La pendiente del B+ es **0.93** (esperada 1). Realiza el mismo proceso de recorrer las hojas por lo que debería seguir siendo lineal.
+
+En cuanto a eficiencia, con IDs ascendentes el **B+** sigue siendo el más rápido, pero el ABB pasa a ser el más lento, porque recorrer una lista enlazada cuesta más que retornar una lista que ya estaba ordenada.
+
+En conclusión, el costo para listar en orden todos los elementos en los árboles es lineal, sin importar el orden de inserción, porque solo se recorren todos los estudiantes. La lista en cambio, si cuesta más por tener que ordenarla en caso de que los IDs estén desordenados.  
+El B+ es el más rápido en cualquier orden. Con IDs ordenados, el ABB pasa a ser más lento que una lista ya ordenada aunque sigue siendo lineal.
+Las pendientes obtenidas están cerca de 1, que era lo esperado.
 
 
 
