@@ -36,7 +36,7 @@ orden en que se insertan.
 ### 2.2 Árbol binario de búsqueda, ABB (`ArbolABB.py`)
 
 Cada nodo guarda un estudiante y apunta a un hijo izquierdo (IDs menores) y a uno derecho (IDs
-mayores o iguales), así que su forma depende del orden de inserción. Todas
+mayores), así que su forma depende del orden de inserción. Todas
 las operaciones son iterativas (sin recursión). Ya que python tiene un límite de recursión.
 
 - **Insertar:** baja desde la raíz comparando IDs hasta encontrar un hijo vacío.
