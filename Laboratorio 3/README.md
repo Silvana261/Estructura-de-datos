@@ -244,7 +244,8 @@ Para el archivo del experimento E1 se promedia la altura de todas las repeticion
 
 ## 5. Análisis de los resultados
 ### E1: Inserción
-<img width="2100" height="900" alt="image" src="https://github.com/user-attachments/assets/975c18b4-3523-4eda-bb97-cd47060ddca7" />
+<img width="2100" height="900" alt="image" src="https://github.com/user-attachments/assets/ff6ba027-b5c1-4046-9b9e-92b970e408a3" />
+
 
 El panel izquierdo usa IDs en orden aleatorio y el derecho IDs en orden ascendente. Cada panel tiene una curva por estructura.
 
