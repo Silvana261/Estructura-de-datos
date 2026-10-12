@@ -532,5 +532,5 @@ están en `graficas/`.
   debía calcularse solo con los N grandes.
 - **Redacción:** ayuda para redactar este README y para corregir la gramática.
 - **Comandos de verificación:** los comandos usados para consultar las versiones de Python, de las
-  librerías y las características del equipo (sección 4).
+  librerías y las características del equipo.
 - **Corregir código:** La IA me ayudó a corregir y comprender la implementación del árbol B+, porque se me dificultó entender cómo funcionaba y cómo se debía implementar. También cuando estaba haciendo las estructuras con recursión, me sugirió hacerlo de manera iterativa por el límite de recursión en python.
