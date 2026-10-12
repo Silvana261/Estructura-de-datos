@@ -1,5 +1,5 @@
 import os
-
+from matplotlib.ticker import NullFormatter
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -26,10 +26,10 @@ NOMBRES_EXPERIMENTO = {
     "E3": "Listado ascendente",
     "E5": "Búsqueda por rango",
 }
-
+ 
 NOMBRES_ORDEN = {"aleatorio": "IDs en orden aleatorio", "ordenado": "IDs en orden ascendente"}
-
-
+ 
+ 
 def cargar_datos(archivos):
     partes = []
     for archivo in archivos:
@@ -37,16 +37,16 @@ def cargar_datos(archivos):
             print(f"Aviso: no se encontró '{archivo}', se omite.")
             continue
         partes.append(pd.read_csv(archivo))
-
+ 
     if not partes:
         raise FileNotFoundError("No se encontró ninguno de los CSV. Corre primero los experimentos.")
-
+ 
     df = pd.concat(partes, ignore_index=True)
     df["tiempo_s"] = pd.to_numeric(df["tiempo_s"], errors="coerce")
     df = df.dropna(subset=["tiempo_s"])
     return df
-
-
+ 
+ 
 def contar_atipicos(tiempos):
     # Regla de Tukey sobre las repeticiones de un mismo (estructura, orden, N):
     # una repetición se MARCA como atípica si queda fuera de [Q1 - 1.5*IQR, Q3 + 1.5*IQR].
@@ -54,8 +54,8 @@ def contar_atipicos(tiempos):
     q1, q3 = tiempos.quantile(0.25), tiempos.quantile(0.75)
     iqr = q3 - q1
     return int(((tiempos < q1 - 1.5 * iqr) | (tiempos > q3 + 1.5 * iqr)).sum())
-
-
+ 
+ 
 def agrupar(df, experimento):
     # Por cada (estructura, orden, N): promedio y desviación estándar de TODAS las repeticiones.
     # Las repeticiones atípicas se conservan; solo se cuenta cuántas hay para reportarlas.
@@ -69,8 +69,8 @@ def agrupar(df, experimento):
                       "mean": t.mean(), "std": t.std(), "count": len(t)})
     print(f"{experimento}: {marcadas} de {len(datos)} repeticiones marcadas como atípicas (se conservan)")
     return pd.DataFrame(filas)
-
-
+ 
+ 
 def agrupar_altura(df):
     # La altura es una propiedad estructural del árbol, no una medición con ruido.
     datos = df.copy()
@@ -81,8 +81,8 @@ def agrupar_altura(df):
     datos = datos[datos["experimento"] == sorted(datos["experimento"].unique())[0]]
     return (datos.groupby(["estructura", "orden", "N"])["altura"]
             .agg(["mean", "std", "count"]).reset_index())
-
-
+ 
+ 
 def calcular_pendiente(N, valores):
     # Pendiente de la regresión log10(N) vs log10(valores), usando solo N >= N_MIN_AJUSTE.
     # Es el exponente k de valores ≈ c * N^k. Se calcula siempre, sin importar la escala del eje Y.
@@ -93,67 +93,82 @@ def calcular_pendiente(N, valores):
         return None
     pendiente, _ = np.polyfit(np.log10(N[m]), np.log10(valores[m]), 1)
     return pendiente
-
-
-def graficar_subplot(ax, resumen, orden, escala_y, ylabel, estructuras):
+ 
+ 
+def graficar_subplot(ax, resumen, orden, escala_y, ylabel, estructuras, anotar=False):
     datos_orden = resumen[resumen["orden"] == orden]
-
+ 
     for estructura in estructuras:
         d = datos_orden[datos_orden["estructura"] == estructura].sort_values("N")
         if d.empty:
             continue
-
+ 
         pendiente = calcular_pendiente(d["N"], d["mean"])
         etiqueta = NOMBRES.get(estructura, estructura)
         if pendiente is not None:
             etiqueta += f" (pendiente≈{pendiente:.2f})"
-
+ 
         # La banda inferior se limita para que nunca llegue a 0 o negativo (se rompe en escala log).
         std = d["std"].fillna(0)
         inferior = np.maximum(d["mean"] - std, d["mean"] * 0.01)
         superior = d["mean"] + std
-
+ 
         ax.errorbar(
             d["N"], d["mean"], yerr=np.vstack([d["mean"] - inferior, superior - d["mean"]]),
             label=etiqueta, color=COLORES.get(estructura),
             marker="o", markersize=5, capsize=3, linewidth=1.8,
         )
         ax.fill_between(d["N"], inferior, superior, color=COLORES.get(estructura), alpha=0.12)
-
+ 
+        if anotar:
+            # Se escribe el valor de cada punto encima de él (solo para la gráfica de altura)
+            for x, y in zip(d["N"], d["mean"]):
+                ax.annotate(f"{y:.0f}", (x, y), textcoords="offset points", xytext=(0, 8),
+                            ha="center", fontsize=8, color=COLORES.get(estructura))
+ 
     ax.set_xscale("log")
     ax.set_yscale(escala_y)
+ 
+    if anotar:
+        # Marcas del eje Y con números normales (1, 2, 3, 5, 10...) en vez de potencias de 10
+        ymin, ymax = ax.get_ylim()
+        marcas = [t for t in [1, 2, 3, 5, 10, 20, 30, 50, 100, 200, 300, 500, 1000, 3000, 10000, 30000]
+                  if ymin <= t <= ymax]
+        ax.set_yticks(marcas)
+        ax.set_yticklabels([str(t) for t in marcas])
+        ax.yaxis.set_minor_formatter(NullFormatter())
     ax.set_xlabel("Tamaño de la entrada (N)")
     ax.set_ylabel(ylabel)
     ax.set_title(NOMBRES_ORDEN.get(orden, orden))
     ax.legend(title=f"Estructura (pendiente con N ≥ {N_MIN_AJUSTE})")
     ax.grid(True, which="both", linestyle="--", alpha=0.4)
-
+ 
     texto = "Escala eje X: logarítmica\nEscala eje Y: logarítmica"
     ax.text(0.02, 0.98, texto, transform=ax.transAxes, fontsize=8, va="top", ha="left",
             bbox=dict(boxstyle="round", facecolor="white", alpha=0.8, edgecolor="gray"))
-
-
-def hacer_figura(resumen, titulo, ylabel, ruta, estructuras):
+ 
+ 
+def hacer_figura(resumen, titulo, ylabel, ruta, estructuras, anotar=False):
     ordenes = [o for o in ["aleatorio", "ordenado"] if o in resumen["orden"].unique()]
     escala_y = "log"      # siempre log-log
-
+ 
     fig, axes = plt.subplots(1, len(ordenes), figsize=(7 * len(ordenes), 6), squeeze=False)
     for ax, orden in zip(axes[0], ordenes):
-        graficar_subplot(ax, resumen, orden, escala_y, ylabel, estructuras)
-
+        graficar_subplot(ax, resumen, orden, escala_y, ylabel, estructuras, anotar)
+ 
     fig.suptitle(titulo, fontsize=12)
     fig.tight_layout(rect=[0, 0, 1, 0.92])
     os.makedirs(os.path.dirname(ruta), exist_ok=True)
     fig.savefig(ruta, dpi=150)
     plt.close(fig)
     print(f"Guardada: {ruta}")
-
-
+ 
+ 
 def main():
     df = cargar_datos(ARCHIVOS_CSV)
     experimentos = sorted(df["experimento"].unique())
     print(f"Experimentos encontrados: {experimentos}")
-
+ 
     for exp in experimentos:
         resumen = agrupar(df, exp)
         if resumen.empty:
@@ -166,7 +181,7 @@ def main():
             os.path.join(CARPETA_SALIDA, f"{exp}_{nombre.replace(' ', '_')}.png"),
             ("lista", "abb", "bmas"),
         )
-
+ 
     altura = agrupar_altura(df)
     if not altura.empty:
         hacer_figura(
@@ -175,8 +190,10 @@ def main():
             "Altura del árbol (niveles)",
             os.path.join(CARPETA_SALIDA, "altura_vs_N.png"),
             ("abb", "bmas"),
+            anotar=True,
         )
-
-
+ 
+ 
 if __name__ == "__main__":
     main()
+ 
