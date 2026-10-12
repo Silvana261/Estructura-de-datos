@@ -302,7 +302,7 @@ En cuanto a eficiencia, con IDs ascendentes el **B+** es claramente el mejor.  E
 En conclusión, la lista es la peor en cuanto a tiempo para realizar las búsquedas. Los árboles solo son mejores si no se degeneran. Además, el ABB es la mejor opción para buscar, pero solo con IDs en orden aleatorio al insertarlos porque si se insertan en orden, se vuelve peor que la lista. Y por último, el B+ es el más estable, ya que la curva no cambia casi nada con el orden y el tiempo de respuesta es muy bueno.
 
 
-### 6.3 E3: Listado ascendente
+### E3: Listado ascendente
 
 <img width="2100" height="900" alt="image" src="https://github.com/user-attachments/assets/6a9f9def-321e-4b7a-9f14-1af37835ce0e" />
 
@@ -334,8 +334,35 @@ El B+ es el más rápido en cualquier orden. Con IDs ordenados, el ABB pasa a se
 Las pendientes obtenidas están cerca de 1, que era lo esperado.
 
 
+### E4: Altura de los árboles
 
+<img width="2100" height="900" alt="image" src="https://github.com/user-attachments/assets/0a387e0a-259a-443c-a7dd-61582ba3a9c5" />
+
+
+La altura no depende del tiempo ni de la máquina, es una propiedad de cada árbol.
+
+En el panel izquierdo usa IDs insertados de forma aleatoria y el derecho IDs insertados en orden ascendente.
+
+
+**En el ABB con IDs en orden aleatorio, se puede observar que:**
   
+- La altura crece despacio y la pendiente es **0.15** (esperada 1.1). Cuando se insertan los IDs de forma aleatoria, se espera que el árbol esté "balanceado", entonces su altura crece de forma logarítmica.
 
+**En el ABB con IDs en orden ascendente, se puede observar que:**
+
+- La pendiente es **1**. Es lo esperado porque la altura es lineal y crece conforme crece N, porque cada estudiante nuevo es mayor que todos los anteriores y queda debajo del último, así que el árbol es una cadena.
   
+-  No hay barras de error: siempre da lo mismo, sin importar la repetición.
 
+**En el B+, se puede observar que:** 
+
+- La altura va por escalones: 1 nivel con N entre 10 y 50, 2 niveles con N entre 100 y 1000, y 3
+  niveles desde N = 2000 hasta N = 30 000.
+
+- Es igual en los dos órdenes de inserción, porque el B+ se mantiene balanceado al dividir sus
+  nodos.
+- Con N ≤ 50 todos los estudiantes caben en una sola hoja (el grado es 50).
+  
+- Al obtener una pendiente **0.09** tan pequeña, dice que la altura crece muy lento mientras aumenta N, lo que confirma la eficiencia de este árbol.
+
+En conclusión, Con IDs ascendentes el ABB pasa de tener una altura logarítmica a una igual a N, y por eso sus tiempos de búsqueda se vuelven lineales. Y el B+ mantiene una altura de 1 a 3 niveles, sin importar el orden de inserción.
