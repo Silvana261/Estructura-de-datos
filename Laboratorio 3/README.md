@@ -218,7 +218,7 @@ Lo que ayuda a verificar si se cumple con la complejidad teórica o no.
   indica la altura de la curva.
 
 ### Altura de los árboles
-Para el archivo del experimento E1 se promedia la altura de todas las repeticiones para cada `N` en cada orden de inserción. La lista no aparece, porque no tiene altura.
+Para el archivo del experimento E1 se promedia la altura de todas las repeticiones para cada `N` en cada orden de inserción. La lista no aparece, porque no tiene altura. En cada punto, se etiqueta la altura promedio de los árboles en ese punto, para aclarar el valor.
 
 ## Cómo leer las gráficas
 
@@ -361,8 +361,47 @@ En el panel izquierdo usa IDs insertados de forma aleatoria y el derecho IDs ins
 
 - Es igual en los dos órdenes de inserción, porque el B+ se mantiene balanceado al dividir sus
   nodos.
+  
 - Con N ≤ 50 todos los estudiantes caben en una sola hoja (el grado es 50).
   
 - Al obtener una pendiente **0.09** tan pequeña, dice que la altura crece muy lento mientras aumenta N, lo que confirma la eficiencia de este árbol.
 
 En conclusión, Con IDs ascendentes el ABB pasa de tener una altura logarítmica a una igual a N, y por eso sus tiempos de búsqueda se vuelven lineales. Y el B+ mantiene una altura de 1 a 3 niveles, sin importar el orden de inserción.
+
+### E5: Búsqueda por rango
+
+<img width="2100" height="900" alt="image" src="https://github.com/user-attachments/assets/dca4e2f2-a095-49ee-a3a7-820d551714ce" />
+
+El panel izquierdo usa IDs en orden aleatorio y el derecho IDs en orden ascendente. Cada panel
+tiene una curva por estructura. Solo se usan los tamaños mayores a o iguales a 100 (10<sup>2</sup>)
+
+**En la búsqueda por rango con IDs en orden aleatorio, se puede observar que:**
+
+- La pendiente de la lista es **1.01** (esperada 1). Para cada consulta recorre la lista completa
+  comparando el ID de cada estudiante, y no puede detenerse antes porque la lista no está
+  ordenada. Por lo que el costo será O(Q*N) ( Q = número de búsquedas), pero como Q es una constante el costo es O(N).
+  
+- La pendiente del ABB es **0.09** (esperada ≈ 0 a 0.1). El árbol baja hasta donde empieza el
+  rango, que cuesta O(log N), y luego recoge los 100 estudiantes del rango. Como K = 100 es constante, entonces el tiempo casi no depende de N por lo que la curva queda casi plana, ya que lo único que cambia N es los niveles que debe bajar el árbol hasta donde empieza el rango.
+
+- La pendiente del B+ es **0.04** (esperada ≈ 0 a 0.1). Baja hasta la hoja donde empieza el rango y
+  después recorre las hojas enlazadas hasta pasar el final. Es igual de plano que el ABB y con
+  menos pendiente.
+  
+En cuanto a eficiencia, con IDs aleatorios las dos estructuras en árbol son mucho más rápidas que la lista cuando crece N. El **B+** es la estructura más rápida y el **ABB** es un poco menos rápido porque tiene que subir y bajar varias veces para recoger los nodos, mientras que el B+ solo los recorre consecutivamente. 
+
+**En la búsqueda por rango con IDs en orden ascendente, se puede observar que:**
+
+- La pendiente en la lista es **1.00** ( esperada 1). Es el mismo algoritmo que en orden aleatorio, entonces sigue recorriendo toda la lista para cada N. El orden de inserción no lo cambia.
+
+-  La pendiente del ABB es **0.98** (esperada  1).  Debido a que queda como una lista enlazada, para llegar al inicio del rango debe recorrer todos los nodos anteriores desde la raíz. Por lo que el costo pasa a ser lineal O(N).
+
+- La pendiente del B+ es **0.03**   (esperada ≈ 0 a 0.1). Es casi igual que en aleatorio: como el B+ se mantiene balanceado, el orden en el que se inserten los estudiantes no lo afecta.
+
+En cuanto a eficiencia, con IDs ascendentes el **B+** es claramente el mejor, manteniendo una curva parecida en los dos ordenes de inserción.  El **ABB** pasa a ser el más lento, incluso
+más que la lista, en todos los N. Ambos son lineales, pero recorrer nodos enlazados por punteros
+cuesta más que recorrer un arreglo.
+
+En conclusión, con IDs aleatorios, los árboles hacen la búsqueda por rango casi sin depender de N, solo que el B+ es el más rápido porque no tiene que subir y bajar varias veces. 
+Con los IDs ascendentes, el ABB deja de ser logarítmico y pasa a ser peor que la lista en tiempo. El B+ no cambia.
+De todos los experimentos, este es donde el B+ da más ventaja, ya que sus hojas enlazadas permiten recoger rangos en muy poco tiempo y no depende del orden de inserción.
