@@ -347,7 +347,7 @@ En el panel izquierdo usa IDs insertados de forma aleatoria y el derecho IDs ins
 
 **En el ABB con IDs en orden aleatorio, se puede observar que:**
   
-- La altura crece despacio y la pendiente es **0.15** (esperada 1.1). Cuando se insertan los IDs de forma aleatoria, se espera que el árbol esté "balanceado", entonces su altura crece de forma logarítmica.
+- La altura crece despacio y la pendiente es **0.15** (esperada 0.1 a 0.4). Cuando se insertan los IDs de forma aleatoria, se espera que el árbol esté "balanceado", entonces su altura crece de forma logarítmica.
 
 **En el ABB con IDs en orden ascendente, se puede observar que:**
 
