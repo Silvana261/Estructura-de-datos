@@ -10,7 +10,7 @@ class Nodo:
         self.hijos = None          # En hijos se guarda los nodos a los que apuntará en caso de ser nodo padre, pero si es una hoja, esta variable sigue None
         self.es_hoja = True        # Será False si deja de ser una hoja. Empieza en True, porque al crear un Nodo siempre empieza como hoja
                                 
-    def verficar_si_contiene_punto(self, coordenada_x_punto, coordenada_y_punto): # Función para verificar si un punto (x,y) cae dentro de las dimensiones del Nodo
+    def verificar_si_contiene_punto(self, coordenada_x_punto, coordenada_y_punto): # Función para verificar si un punto (x,y) cae dentro de las dimensiones del Nodo
     
         dentro_rango_en_x = self.coordenada_x <= coordenada_x_punto < self.coordenada_x + self.longitud_horizontal     # Se valida si está dentro del rango en el eje X del Nodo
                                                                                                                            # La coordenada X del punto debe ser mayor o igual a la del inicio (coordenada X del nodo) y menor que la del inicio + la longitud
@@ -82,7 +82,7 @@ class Nodo:
          
         se_cruza_en_x = self.coordenada_x < x_max and x_min < self.coordenada_x + self.longitud_horizontal   # El tramo de la consulta en X es [x_min, x_max), entonces se verifica: inicio del nodo < fin de la consulta y inicio de la consulta < fin del nodo
         
-        se_cruza_en_y = self.coordenada_y < y_max and y_min < self,self.coordenada_y + self.longitud_vertical   # # El tramo de la consulta en Y es [y_min, y_max), entonces se hace la misma verificación anterior pero en el eje Y
+        se_cruza_en_y = self.coordenada_y < y_max and y_min < self.coordenada_y + self.longitud_vertical   # # El tramo de la consulta en Y es [y_min, y_max), entonces se hace la misma verificación anterior pero en el eje Y
         
         return se_cruza_en_x and se_cruza_en_y      # En caso de que las dos verificaciones se cumplan, se retorna True. Si al menos una no cumple, False.
     
@@ -94,7 +94,7 @@ class Nodo:
         if self.verificar_si_se_cruza(x_min,y_min, x_max, y_max):   # Se verifica que el rango buscado se cruce con el del Nodo actual
             
             if self.es_hoja :        # Si se cruzan, se revisa si el Nodo actual es una hoja
-                if self.punto != None :  # Y si también tiene un punto almacenado, se revisa
+                if self.punto is not None :  # Y si también tiene un punto almacenado, se revisa
                     coordenada_x_punto, coordenada_y_punto = self.punto
                     if x_min <= coordenada_x_punto < x_max and y_min <= coordenada_y_punto < y_max :    # Si las coordenadas del punto están en el rango buscado
                         puntos_encontrados.append(self.punto)    # Se agrega a la lista de encontrados
@@ -106,4 +106,14 @@ class Nodo:
             return puntos_encontrados    # se descarta el cuadrante y se devuelve la lista tal y como está.
         
         return puntos_encontrados        # Al finalizar, se retornan todos los puntos encontrados dentro del rango
-        
+
+raiz = Nodo(0, 0, 8, 8)
+raiz.insertar_punto(1, 1)
+raiz.insertar_punto(6, 2)
+raiz.insertar_punto(2, 3)
+raiz.insertar_punto(3, 1)
+
+print(raiz.consultar_rango(0, 0, 3, 3))   # [(1, 1)]
+print(raiz.consultar_rango(0, 0, 8, 8))   # los 4 puntos (orden puede variar)
+print(raiz.consultar_rango(5, 0, 8, 4))   # [(6, 2)]
+print(raiz.consultar_rango(7, 7, 8, 8))   # []
