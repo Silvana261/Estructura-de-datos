@@ -12,9 +12,9 @@ class Nodo:
                                 
     def verficar_si_contiene_punto(self, coordenada_x_punto, coordenada_y_punto): # Función para verificar si un punto (x,y) cae dentro de las dimensiones del Nodo
     
-        dentro_rango_en_x = self.coordenada_x <= self.coordenada_x_punto < self.cordenada_x + self.longitud_horizontal     # Se valida si está dentro del rango en el eje X del Nodo
+        dentro_rango_en_x = self.coordenada_x <= coordenada_x_punto < self.coordenada_x + self.longitud_horizontal     # Se valida si está dentro del rango en el eje X del Nodo
                                                                                                                            # La coordenada X del punto debe ser mayor o igual a la del inicio (coordenada X del nodo) y menor que la del inicio + la longitud
-        dentro_rango_en_y = self.coordenada_y <= self.coordenada_y_punto < self.cordenada_y + self.longitud_horizontal     # Se valida si está dentro el rango en el eje Y del Nodo
+        dentro_rango_en_y = self.coordenada_y <= coordenada_y_punto < self.coordenada_y + self.longitud_vertical     # Se valida si está dentro el rango en el eje Y del Nodo
                                                                                                                            # La coordenada Y del punto debe ser mayor o igual que la del inicio del Nodo y menor que la del inicio + la longitud
         return dentro_rango_en_x and dentro_rango_en_y  # Si se cumplen las dos, se retorna True
     
@@ -54,7 +54,7 @@ class Nodo:
 
     def insertar_punto(self, coordenada_x_punto, coordenada_y_punto):      # Inserta un punto en el nodo actual o en alguno de sus hijos
         
-        if not self.verficar_si_contiene_punto(coordenada_x_punto, coordenada_y_punto):        # Comprueba si el punto está dentro de los límites del nodo actual
+        if not self.verificar_si_contiene_punto(coordenada_x_punto, coordenada_y_punto):        # Comprueba si el punto está dentro de los límites del nodo actual
             return False   # Si no cumple, se retorna False ya que el punto no se puede insertar en el rango
         
         if self.es_hoja:   # Comprueba si el nodo actual es una hoja, para poder almacenar el punto
