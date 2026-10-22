@@ -89,7 +89,6 @@ class Nodo:
         
         se_cruza_en_y = self.coordenada_y < y_max and y_min < self.coordenada_y + self.longitud_vertical   # # El tramo de la consulta en Y es [y_min, y_max), entonces se hace la misma verificación anterior pero en el eje Y
         
-        
         return se_cruza_en_x and se_cruza_en_y      # En caso de que las dos verificaciones se cumplan, se retorna True. Si al menos una no cumple, False.
     
     def consultar_rango(self, x_min, y_min, x_max, y_max, puntos_encontrados = None):   # Función para encontrar los puntos dentro de un rango, o sea los puntos dentro de un cuadrado
@@ -116,19 +115,20 @@ class Nodo:
     
     def consultar_en_radio(self, centro_x, centro_y, radio):   # Función para buscar puntos a un radio de un punto específico (centro_x, centro_y), o sea los puntos dentro de este círculo
         
-        x_min = centro_x - radio
+        # Se calculan las coordenadas del cuadrante mínimo que contiene al círculo que se forma con el radio ingresado
+        x_min = centro_x - radio     
         x_max = centro_x + radio
         y_min = centro_y - radio
         y_max = centro_y + radio
         
-        puntos_candidatos = consultar_rango(x_min, y_min, x_max, y_max)
+        puntos_candidatos =self.consultar_rango(x_min, y_min, x_max, y_max)   # Los puntos candidatos serán los que estén dentro del cuadrante formado por las coordenadas anteriores
+                                                                              # Ya que pueden haber puntos dentro, que no pertenezcan al círculo
+        puntos_resultantes = []  # Se inicializa la lista donde se dejarán los puntos correctos
         
-        puntos_resultantes = []
-        
-        for coordenada_x_punto, coordenada_y_punto in puntos_candidatos:
-            distancia = ((coordenada_x_punto - centro_x)**2 + (coordenada_y_punto - centro_y)**2)**(1/2)
+        for coordenada_x_punto, coordenada_y_punto in puntos_candidatos:   # Se recorren los puntos de la lista de los candidatos
+            distancia = ((coordenada_x_punto - centro_x)**2 + (coordenada_y_punto - centro_y)**2)**(1/2)   # Se calcula la distancia entre el punto y el centro del círculo, con la distancia euclidiana
 
-            if distancia <= radio:
-                puntos_resultantes.append((coordenada_x_punto, coordenada_y_punto))
+            if distancia <= radio:  # La distancia entre los puntos y el centro deben ser menor o igual a la del radio para estar dentro
+                puntos_resultantes.append((coordenada_x_punto, coordenada_y_punto))   # Los que cumplan, se agregan a la lista
         
-        return puntos_resultantes
+        return puntos_resultantes   # Al final se retorna la lista con los puntos al rededor del ingresado en ese radio específico
