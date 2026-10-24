@@ -132,3 +132,26 @@ class Nodo:
                 puntos_resultantes.append((coordenada_x_punto, coordenada_y_punto))   # Los que cumplan, se agregan a la lista
         
         return puntos_resultantes   # Al final se retorna la lista con los puntos al rededor del ingresado en ese radio específico
+
+
+    def distancia_minima_a_cuadro(self, x_consulta, y_consulta):    # Función para calcular la distancia entre un punto y el lado más cercano de un cuadro
+        
+        # Primero se definen las coordenadas que delimitan al cuadro 
+        x_inicio = self.coordenada_x
+        x_fin = self.coordenada_x + self.longitud_horizontal
+        y_inicio = self.coordenada_y 
+        y_fin = self.coordenada_y + self.longitud_vertical
+        
+        distancia_mínima_x = max(x_inicio - x_consulta, 0, x_consulta - x_fin )    # Luego se calcula la distancia horizontal mínima al cuadro usando max()
+                                                                                   # Si el punto está a la izquierda (x_inicio - x_consulta) es positivo
+                                                                                   # Si el punto está a la derecha del cuadro (x_consulta - x_fin) se positivo
+                                                                                   # Si el punto está dentro del cuadro, las anteriores diferencias serán negativas y la distancia al cuadro será 0
+        
+        distancia_mínima_y = max(y_inicio - y_consulta, 0, y_consulta - y_fin)     # Se hace lo mismo pero en el eje Y
+        
+        return (distancia_mínima_x**2 + distancia_mínima_y**2)**(1/2)   # Retornar la distancia del punto hasta el cuadro, con la distancia euclidiana
+    
+    def vecino_mas_cercano(self, x_consulta, y_consulta, mejor = None):
+        
+        if mejor is None:
+            mejor = [None, ]
