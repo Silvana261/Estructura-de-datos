@@ -171,12 +171,13 @@ class Nodo:
                     mejor[1] = distancia
             return mejor  # Se retorna la lista
         
-        indice_primero = self.indice_hijo(x_consulta, y_consulta)
-        self.hijos[indice_primero].vecino_mas_cercano(x_consulta, y_consulta, mejor)
+        else:  # Si no es una hoja, se analizan sus hijos
+            indice_primero = self.indice_hijo(x_consulta, y_consulta)   # Primero se analiza en el que directamente cae el punto de la consulta, ya que es más  probable que esté allí el más cercano. Además, con este se puede ver directamente los cuadros que no sirven definitivamente desde el principio
+            self.hijos[indice_primero].vecino_mas_cercano(x_consulta, y_consulta, mejor) # Se llama la función recursivamente 
+            
+            for i in range(4):   # Luego se recorren los demás hijos, por si hay algún punto más cercano
+                if i != indice_primero:
+                    self.hijos[i].vecino_mas_cercano(x_consulta, y_consulta, mejor)
         
-        for i in range(4):
-            if i != indice_primero:
-                self.hijos[i].vecino_mas_cercano(x_consulta, y_consulta)
-        
-        return mejor
+        return mejor   # Finalmente, se devuelve la variable mejor con el punto más cercano de todo el QuadTree
         
