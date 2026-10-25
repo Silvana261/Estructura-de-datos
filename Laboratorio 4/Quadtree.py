@@ -151,7 +151,32 @@ class Nodo:
         
         return (distancia_mínima_x**2 + distancia_mínima_y**2)**(1/2)   # Retornar la distancia del punto hasta el cuadro, con la distancia euclidiana
     
-    def vecino_mas_cercano(self, x_consulta, y_consulta, mejor = None):
+    def vecino_mas_cercano(self, x_consulta, y_consulta, mejor = None):   # Función para buscar el vecino más cercano, mejor: es una lista que guarda el mejor resultado encontrado hasta el momento [punto, distancia]
         
-        if mejor is None:
-            mejor = [None, ]
+        if mejor is None:          # La primera vez que se llama a la función
+            mejor = [None, None]   # Se inicializa en None la lista
+        
+        # Si ya se hace encontrado un punto 
+        elif self.distancia_minima_a_cuadro(x_consulta, y_consulta) >= mejor[1]:  # Se calcula la distancia del punto de la consulta hasta el cuadro actual y se compara con la mejor distancia que se ha hallado
+                return mejor       # Si es mayor, significa que ninguno de los puntos de ese cuadrante sirve, entonces se retorna la lista, ahorrando camino
+            
+        if self.es_hoja:                 # Si la distancia del hasta el cuadrante es menor a la mejor distancia hasta ahora, se verifica si este Nodo es una hoja
+            if self.punto is not None:   # Si tiene punto
+                
+                x_punto, y_punto = self.punto                                                 # Se guardan las coordenadas del punto
+                distancia = ((x_punto - x_consulta)**2 + (y_punto - y_consulta)**2)**(1/2)    # Se calcula la distancia entre el punto del nodo y el de la consulta
+
+                if mejor[0] is None or distancia < mejor[1]:   # Si es la primera distancia que se calcula o si es menor a la mejor distancia actual
+                    mejor[0] = self.punto    # Se actualiza la lista con el punto y la distancia entre el y el de la consulta
+                    mejor[1] = distancia
+            return mejor  # Se retorna la lista
+        
+        indice_primero = self.indice_hijo(x_consulta, y_consulta)
+        self.hijos[indice_primero].vecino_mas_cercano(x_consulta, y_consulta, mejor)
+        
+        for i in range(4):
+            if i != indice_primero:
+                self.hijos[i].vecino_mas_cercano(x_consulta, y_consulta)
+        
+        return mejor
+        
