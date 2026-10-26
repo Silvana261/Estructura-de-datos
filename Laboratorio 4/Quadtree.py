@@ -181,3 +181,32 @@ class Nodo:
         
         return mejor   # Finalmente, se devuelve la variable mejor con el punto más cercano de todo el QuadTree
         
+# FUNCIONES DE FUERZA BRUTA
+
+def vecino_mas_cercano_fuerza_bruta(puntos, x_consulta, y_consulta):  # Función para buscar el vecino más cercano a un punto
+    
+    mejor_punto = None      # Se inicializan las variables mejor_punto y mejor_distancia en None
+    mejor_distancia = None
+    
+    for x_punto, y_punto in puntos:   # Se recorre cada punto almacenado
+        distancia = ((x_punto - x_consulta)**2 + (y_punto - y_consulta)**2)**(1/2)   # Para cada uno, se mide la distancia hasta el punto de la consulta
+        
+        if mejor_punto is None or distancia < mejor_distancia:   # Si es la primera comparación o si la distancia es menor a una comparación anterior
+            mejor_punto = (x_punto, y_punto)   # Se actualizan las variables con las coordenadas del punto y la distancia
+            mejor_distancia = distancia
+    
+    return [mejor_punto, mejor_distancia]   # Se retorna el punto más cercano y la distancia
+
+
+def busqueda_radio_fuerza_bruta(puntos, x_centro, y_centro, radio):  # Función para buscar los puntos en un radio con fuerza bruta
+    
+    puntos_en_radio = []   # Lista donde se guardarán los puntos
+     
+    for x_punto, y_punto in puntos:  # Se recorre todos los puntos
+        
+        distancia = ((x_punto - x_centro)**2 + (y_punto - y_centro)**2)**(1/2)  # Se mide la distancia entre el punto del centro y los demás
+        
+        if distancia <= radio:                           # Se verifica si están dentro del radio buscado
+            puntos_en_radio.append((x_punto, y_punto))   # Si el punto cumple, se agregan a la lista
+    
+    return puntos_en_radio  # Se retorna los puntos resultantes
