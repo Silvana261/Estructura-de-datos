@@ -1,6 +1,6 @@
 # Clase que representa un Nodo del QuadTree
 
-class Nodo:
+class Nodo_Quadtree:
     def __init__(self, coordenada_x, coordenada_y, longitud_horizontal, longitud_vertical, capacidad_nodo = 1):      # En cada cuadrante solo podrá haber un punto
         self.coordenada_x = coordenada_x                       # Cada Nodo tiene una cordenada en X y en Y                   
         self.coordenada_y = coordenada_y
@@ -25,10 +25,10 @@ class Nodo:
         mitad_horizontal = self.longitud_horizontal / 2     # Calcula la mitad del ancho del nodo actual. 
         mitad_vertical =  self.longitud_vertical / 2        # Calcula la mitad de la altura del nodo actual.
         
-        hijo_Noroeste = Nodo(self.coordenada_x, self.coordenada_y + mitad_vertical, mitad_horizontal, mitad_vertical)                     # Crea el hijo noroeste: comienza en la izquierda y en la mitad superior
-        hijo_Noreste = Nodo(self.coordenada_x + mitad_horizontal, self.coordenada_y + mitad_vertical, mitad_horizontal, mitad_vertical )  # Crea el hijo noreste: comienza en la mitad horizontal y en la mitad superior
-        hijo_Suroeste = Nodo(self.coordenada_x, self.coordenada_y, mitad_horizontal, mitad_vertical)                                      # Crea el hijo suroeste: comienza en la esquina inferior izquierda del nodo actual
-        hijo_Sureste = Nodo(self.coordenada_x + mitad_horizontal, self.coordenada_y, mitad_horizontal, mitad_vertical)                    # Crea el hijo sureste: comienza en la mitad horizontal y en la parte inferior
+        hijo_Noroeste = Nodo_Quadtree(self.coordenada_x, self.coordenada_y + mitad_vertical, mitad_horizontal, mitad_vertical)                     # Crea el hijo noroeste: comienza en la izquierda y en la mitad superior
+        hijo_Noreste = Nodo_Quadtree(self.coordenada_x + mitad_horizontal, self.coordenada_y + mitad_vertical, mitad_horizontal, mitad_vertical )  # Crea el hijo noreste: comienza en la mitad horizontal y en la mitad superior
+        hijo_Suroeste = Nodo_Quadtree(self.coordenada_x, self.coordenada_y, mitad_horizontal, mitad_vertical)                                      # Crea el hijo suroeste: comienza en la esquina inferior izquierda del nodo actual
+        hijo_Sureste = Nodo_Quadtree(self.coordenada_x + mitad_horizontal, self.coordenada_y, mitad_horizontal, mitad_vertical)                    # Crea el hijo sureste: comienza en la mitad horizontal y en la parte inferior
         
         self.hijos = [hijo_Noreste, hijo_Noroeste, hijo_Sureste, hijo_Suroeste]
         self.es_hoja = False    # Ahora que se dividió este Nodo deja de ser una hoja, ahora apunta a los Nodos hijos
@@ -144,7 +144,7 @@ class Nodo:
         
         distancia_mínima_x = max(x_inicio - x_consulta, 0, x_consulta - x_fin )    # Luego se calcula la distancia horizontal mínima al cuadro usando max()
                                                                                    # Si el punto está a la izquierda (x_inicio - x_consulta) es positivo
-                                                                                   # Si el punto está a la derecha del cuadro (x_consulta - x_fin) se positivo
+                                                                                   # Si el punto está a la derecha del cuadrante (x_consulta - x_fin) se positivo
                                                                                    # Si el punto está dentro del cuadro, las anteriores diferencias serán negativas y la distancia al cuadro será 0
         
         distancia_mínima_y = max(y_inicio - y_consulta, 0, y_consulta - y_fin)     # Se hace lo mismo pero en el eje Y
@@ -180,6 +180,9 @@ class Nodo:
                     self.hijos[i].vecino_mas_cercano(x_consulta, y_consulta, mejor)
         
         return mejor   # Finalmente, se devuelve la variable mejor con el punto más cercano de todo el QuadTree
+ 
+ 
+ 
         
 # FUNCIONES DE FUERZA BRUTA
 
