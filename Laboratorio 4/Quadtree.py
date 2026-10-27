@@ -213,8 +213,9 @@ def busqueda_radio_fuerza_bruta(puntos, x_centro, y_centro, radio):  # Función 
             puntos_en_radio.append((x_punto, y_punto))   # Si el punto cumple, se agregan a la lista
     
     return puntos_en_radio  # Se retorna los puntos resultantes
-# Funciones para generar los puntos
 
+
+# FUNCIONES PARA GENERAR LOS PUNTOS
 def generar_puntos_uniformes(cantidad, ancho_ciudad, largo_ciudad ): # Función para generar los puntos (x,y) de manera aleatoria en una ciudad con ciertas dimensiones
     puntos = []   # Lista donde se almacenarán los puntos
     
