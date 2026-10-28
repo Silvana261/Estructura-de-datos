@@ -229,7 +229,7 @@ def generar_puntos_realistas(cantidad, ancho_ciudad, largo_ciudad, dispersion_ba
                                                                                                 # Gran parte de los puntos se concentran alrededor de las coordenadas de unos barrio predefinidos
                                                                                                 # Y el resto de manera uniforme por la ciudad
     
-    barrios = [(5000, 5000), (14000, 6000), (10000, 15000), (16000, 16000)]  # Coordenadas del centro de unos barrios artificiales, que serían como los lugares principales
+    barrios = [(8000, 8000),(32000, 8000),  (20000, 20000), (8000, 32000),   (32000, 32000),  (20000, 10000),  (20000, 30000)   ] # Coordenadas del centro de unos barrios artificiales, que serían como los lugares principales
     puntos = []   # Se inicializa la lista donde se almacenarán los puntos
     
     while len(puntos) < cantidad:  # Se hace un ciclo que se repite hasta alcanzar la cantidad de puntos deseados

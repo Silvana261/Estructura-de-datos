@@ -1,27 +1,44 @@
 import os
+
 import matplotlib.pyplot as plt 
+
 import random 
+
 import Quadtree
+
+
 
 # 1. PRUEBAS PARA VERIFICAR QUE LOS RESULTADOS CON FUERZA BRUTA COINCIDAN CON LOS DEL QUADTREE
 
 def prueba_coincidir():
-    TAMANO = 20000  # Tamaño de la ciudad de prueb
+
+    TAMANO = 20000  # Tamaño de la ciudad de prueba
+
     RADIO = 500     # Radio para probar la búsqueda por Radio
-    
+
+
+
     # Primero se generan los datos, serán 10000 puntos, con una dispersión de 1500 metros (desviación estandar)
+
     puntos = Quadtree.generar_puntos_realistas(10000, ancho_ciudad = TAMANO, largo_ciudad = TAMANO, dispersion_barrio= 1500)
 
+
+
     # Se prueba la construcción del Quadtree
+
     raiz = Quadtree.Nodo_Quadtree(0,0, TAMANO, TAMANO)  # La raíz tendrá coordenadas (0,0) y será un cuadrado ya que el tamaño es igual en el eje x y en el y 
 
     puntos_insertados = 0                               # Contador para los puntos 
+
+
 
     for x, y in puntos:                # Ciclo que recorre cada punto generado anteriormente
 
         if raiz.insertar_punto(x,y):   # Se llama al método del Quadtree para insertar puntos
 
             puntos_insertados += 1     # Se incrementa el contador si la inserción fue exitosa
+
+
 
     print(f"Puntos generados: {len(puntos)}")          # Se muestra la cantidad de puntos generados e insertados
 
@@ -62,8 +79,13 @@ def prueba_coincidir():
 
 
     print("Las 100 consultas coinciden")
-    
+
+
+
     # Ahora comparar si coinciden los resultados en la búsqueda del vecino más cercano
+
+
+
     for i in range(100):                        # Se hacen 100 búsquedas del vecino más cercano
 
         centro_x = random.uniform(0, TAMANO)    # Sobre puntos generados aleatoriamente dentro las dimensiones del cuadrante
@@ -79,11 +101,17 @@ def prueba_coincidir():
 
 
         assert resultado_arbol == resultado_bruta, f"En el resultado difieren en ({centro_x},{centro_y})"  # Con assert se verifica que los dos resultados coincidan, si no se muestra el punto del problema
+
+
+
     print("Las 100 búsquedas coinciden")
 
 
 
 # 2. PRUEBAS UNITARIAS QUADTREE
+
+
+
 # Inserción
 
 def prueba_inserción():
@@ -127,7 +155,7 @@ def prueba_vecino():
 
 def pruebas_unitarias():
     while True:
-        op = input("\n Escoger la prueba unitaria a realizar:\n 1. Probar inserciones.\n 2. Probar búsqueda por radio.\n 3. El vecino más cercano.\n 4. Salir\n")
+        op = input("\\n Escoger la prueba unitaria a realizar:\\n 1. Probar inserciones.\\n 2. Probar búsqueda por radio.\\n 3. El vecino más cercano.\\n 4. Salir\\n")
         match op:
             case "1":
                 prueba_inserción()
@@ -191,7 +219,7 @@ def configurar_ejes(eje, raiz, centro_x, centro_y, zoom):   # Define qué parte 
 
 
 
-def graficar_arbol(raiz, puntos, nombre_archivo, titulo=""):
+def graficar_arbol(raiz, puntos, nombre_archivo, titulo="", color_puntos="red"):
 
     figura, eje = plt.subplots(figsize=(8, 8))
 
@@ -205,7 +233,7 @@ def graficar_arbol(raiz, puntos, nombre_archivo, titulo=""):
 
     ys = [p[1] for p in puntos]
 
-    eje.scatter(xs, ys, color="red", s=tamano_punto(puntos))
+    eje.scatter(xs, ys, color=color_puntos, s=tamano_punto(puntos))
 
 
 
@@ -316,11 +344,12 @@ def graficar_vecino(puntos, x_consulta, y_consulta, vecino, nombre_archivo,titul
     else:
         eje.set_xlabel(f"Cantidad de puntos: {len(puntos)}")
 
-    if len(puntos) <= 20:
-        eje.text(0.02, 0.98, "Consulta: (" + str(x_consulta) + ", " + str(y_consulta) +
-                 ")\\nVecino más cercano: " + str(vecino),
-                 transform=eje.transAxes, verticalalignment="top", fontsize=9,
-                 bbox=dict(boxstyle="round", facecolor="white", alpha=0.85))
+    # Mostrar siempre el punto de consulta y el resultado, incluso con muchos puntos.
+    texto_consulta = f"Punto de consulta: ({x_consulta:.2f}, {y_consulta:.2f})"
+    texto_vecino = f"Vecino más cercano: {vecino}"
+    eje.text(0.02, 0.98, texto_consulta + "\n" + texto_vecino,
+             transform=eje.transAxes, verticalalignment="top", fontsize=9,
+             bbox=dict(boxstyle="round", facecolor="white", alpha=0.85))
 
     eje.legend()
 
@@ -377,77 +406,58 @@ def graficas_pequenas():
 
 
 
-# GRÁFICAS GRANDES (LA CIUDAD COMPLETA). Es una ciudad de 20000 metros con 10000 puntos de entrega
-
+# GRÁFICAS GRANDES (ciudad de 40000 x 40000 m y 10000 puntos)
 def graficas_grandes():
 
-    tamano = 20000
+    tamano = 40000
 
     puntos = Quadtree.generar_puntos_realistas(10000, ancho_ciudad=tamano, largo_ciudad=tamano,
-
-                                               dispersion_barrio=1500)
+                                               dispersion_barrio=2500)
 
     raiz = Quadtree.Nodo_Quadtree(0, 0, tamano, tamano)
 
     for x, y in puntos:
-
         raiz.insertar_punto(x, y)
 
+    # Inserción realista de los 10000 puntos, sin usar rojo.
+    graficar_arbol(raiz, puntos, "graficas/insercion_realista.png",
+                   "Inserción realista de 10000 puntos", color_puntos="steelblue")
 
+    # Búsqueda por radio en una ubicación aleatoria.
+    centro_x = random.uniform(0, tamano)
+    centro_y = random.uniform(0, tamano)
+    radio = 12000
+    encontrados = raiz.consultar_en_radio(centro_x, centro_y, radio)
 
-    # Radio en un barrio denso (centro de un barrio) con zoom
+    graficar_radio(puntos, centro_x, centro_y, radio, encontrados,
+                   "graficas/busqueda_radio.png",
+                   "Búsqueda por radio de 500 m (consulta aleatoria)", raiz=raiz)
 
-    encontrados = raiz.consultar_en_radio(10000, 15000, 500)
+    # Vecino más cercano desde una ubicación aleatoria.
+    x_consulta = random.uniform(0, tamano)
+    y_consulta = random.uniform(0, tamano)
+    vecino = raiz.vecino_mas_cercano(x_consulta, y_consulta)
 
-    graficar_radio(puntos, 10000, 15000, 500, encontrados, "graficas/radio_barrio.png",
+    graficar_vecino(puntos, x_consulta, y_consulta, vecino[0],
+                    "graficas/vecino_mas_cercano.png",
+                    "Vecino más cercano (consulta aleatoria)", raiz=raiz)
 
-                   "Radio 500 m en un barrio denso", raiz=raiz, zoom=1500)
-
-
-
-    # Radio en una zona dispersa
-
-    encontrados = raiz.consultar_en_radio(1000, 19000, 500)
-
-    graficar_radio(puntos, 1000, 19000, 500, encontrados, "graficas/radio_disperso.png",
-
-                   "Radio 500 m en zona dispersa", raiz=raiz, zoom=1500)
-
-
-
-    # Vecino más cercano
-
-    vecino = raiz.vecino_mas_cercano(10000, 15000)
-
-    graficar_vecino(puntos, 10000, 15000, vecino[0], "graficas/vecino_barrio.png",
-
-                    "Vecino más cercano", raiz=raiz, zoom=1500)
-
-
-
-    # Árbol con pocos puntos, uniformes vs. realistas (se ve la diferencia)
-
+    # Conservar también las dos gráficas originales de inserción con 400 puntos.
+    tamano_muestra = 20000
     for nombre, generador in [("uniforme", Quadtree.generar_puntos_uniformes),
-
                               ("realista", Quadtree.generar_puntos_realistas)]:
-
-        muestra = generador(400, ancho_ciudad = tamano, largo_ciudad = tamano)
-
-        arbol_muestra = Quadtree.Nodo_Quadtree(0, 0, tamano, tamano)
-
+        muestra = generador(400, ancho_ciudad=tamano_muestra, largo_ciudad=tamano_muestra)
+        arbol_muestra = Quadtree.Nodo_Quadtree(0, 0, tamano_muestra, tamano_muestra)
         for x, y in muestra:
-
             arbol_muestra.insertar_punto(x, y)
-
         graficar_arbol(arbol_muestra, muestra, "graficas/arbol_" + nombre + ".png",
-
                        "Quadtree con 400 puntos (" + nombre + ")")
-
-
 
 if __name__ == "__main__":
 
     os.makedirs("graficas", exist_ok=True)
+
+
 
     prueba_coincidir()
 
