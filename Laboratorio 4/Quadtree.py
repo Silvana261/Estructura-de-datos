@@ -221,13 +221,13 @@ def generar_puntos_uniformes(cantidad, ancho_ciudad, largo_ciudad ): # Función 
     
     for i in range(cantidad):  # Se hace un ciclo para generar la cantidad de puntos que se quiera 
         x = random.uniform(0, ancho_ciudad)   # Se genera la coordenada x, como un número entre 0 y el ancho máximo de la ciudad
-        y = random.unidorm(0, largo_ciudad)   # Se genera la coordenada y, como un número aleatorio entre 0 y el largo máximo de la ciudad
+        y = random.uniform(0, largo_ciudad)   # Se genera la coordenada y, como un número aleatorio entre 0 y el largo máximo de la ciudad
         puntos.append((x,y))    # Se agrega la tupla a la lista
     return puntos # se retorna la lista con todo los puntos de entrega
 
-def generar_puntos_realistas(cantidad, ancho_ciudad, largo_ciudad, dispersion_barrio ):    # Genera los puntos de manera más realista en una ciudad (unos más agrupados que otros)
-                                                                                           # Gran parte de los puntos se concentran alrededor de las coordenadas de unos barrio predefinidos
-                                                                                           # Y el resto de manera uniforme por la ciudad
+def generar_puntos_realistas(cantidad, ancho_ciudad, largo_ciudad, dispersion_barrio=1500 ):    # Genera los puntos de manera más realista en una ciudad (unos más agrupados que otros)
+                                                                                                # Gran parte de los puntos se concentran alrededor de las coordenadas de unos barrio predefinidos
+                                                                                                # Y el resto de manera uniforme por la ciudad
     
     barrios = [(5000, 5000), (14000, 6000), (10000, 15000), (16000, 16000)]  # Coordenadas del centro de unos barrios artificiales, que serían como los lugares principales
     puntos = []   # Se inicializa la lista donde se almacenarán los puntos
