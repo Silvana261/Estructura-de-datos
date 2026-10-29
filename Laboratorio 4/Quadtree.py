@@ -216,6 +216,8 @@ def busqueda_radio_fuerza_bruta(puntos, x_centro, y_centro, radio):  # Función 
 
 
 # FUNCIONES PARA GENERAR LOS PUNTOS
+
+
 def generar_puntos_uniformes(cantidad, ancho_ciudad, largo_ciudad ): # Función para generar los puntos (x,y) de manera aleatoria en una ciudad con ciertas dimensiones
     puntos = []   # Lista donde se almacenarán los puntos
     
@@ -225,20 +227,19 @@ def generar_puntos_uniformes(cantidad, ancho_ciudad, largo_ciudad ): # Función 
         puntos.append((x,y))    # Se agrega la tupla a la lista
     return puntos # se retorna la lista con todo los puntos de entrega
 
-def generar_puntos_realistas(cantidad, ancho_ciudad, largo_ciudad, dispersion_barrio=1500 ):    # Genera los puntos de manera más realista en una ciudad (unos más agrupados que otros)
+def generar_puntos_realistas(cantidad, ancho_ciudad, largo_ciudad, dispersion_barrio=2500 ):    # Genera los puntos de manera más realista en una ciudad (unos más agrupados que otros)
                                                                                                 # Gran parte de los puntos se concentran alrededor de las coordenadas de unos barrio predefinidos
                                                                                                 # Y el resto de manera uniforme por la ciudad
-    
-    barrios = [(8000, 8000),(32000, 8000),  (20000, 20000), (8000, 32000),   (32000, 32000),  (20000, 10000),  (20000, 30000)   ] # Coordenadas del centro de unos barrios artificiales, que serían como los lugares principales
+    barrios = [(8000, 8000), (32000, 8000), (20000, 20000), (32000, 32000)] # Coordenadas del centro de unos barrios artificiales, que serían como los lugares principales
     puntos = []   # Se inicializa la lista donde se almacenarán los puntos
     
     while len(puntos) < cantidad:  # Se hace un ciclo que se repite hasta alcanzar la cantidad de puntos deseados
         
-        if random.random() < 0.8:  # Cada punto tiene 80% de probabilidad de caer en uno de los barrios
+        if random.random() < 0.7:  # Cada punto tiene 70% de probabilidad de caer en uno de los barrios
             centro_x, centro_y = random.choice(barrios)     # Se escoge un barrio aleatoriamente
             x = random.gauss(centro_x,dispersion_barrio)    # Se genera la coordenada x aleatoriamente utilizando distribución gaussiana
             y = random.gauss(centro_y, dispersion_barrio)   # Igualmente, la coordenada y con dispersión gaussiana
-        else:   # Y el 20% de los datos se generan aleatoriamente por toda la ciudad
+        else:   # Y el 30% de los datos se generan aleatoriamente por toda la ciudad
             x = random.uniform(0, ancho_ciudad)
             y = random.uniform(0, largo_ciudad)
             
