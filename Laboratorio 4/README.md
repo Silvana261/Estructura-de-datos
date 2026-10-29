@@ -51,6 +51,7 @@ La clase tiene los siguientes métodos:
   
   Si el nodo ya es interno, calcula con indice_hijo a cuál hijo pertenece el punto y llama recursivamente a insertar_punto en ese hijo. Devuelve el resultado de esa inserción.
 
+
 * `verificar_si_se_cruza`:
   Función auxiliar que comprueba si el rango rectangular buscado (x_min, y_min, x_max, y_max) se solapa con la región que cubre el nodo. Lo hace eje por eje: en cada uno, el inicio del nodo debe ser menor que el fin de la consulta, y el inicio de la consulta menor que el fin del nodo. Devuelve True solo si hay solape en X y en Y a la vez. Se usa en consultar_rango para podar: si no se cruzan, se descarta el nodo y todo su subárbol sin revisar ninguno de sus puntos.
 
