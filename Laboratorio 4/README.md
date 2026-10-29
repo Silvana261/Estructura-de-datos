@@ -14,7 +14,7 @@ Se tiene coordenadas de entrega (x,y) de 10.000 puntos de entrega por lo que se 
 ### `Quadtree.py`
 Aquí se implementó el Quadtree para dos dimensiones, las funciones para la fuerza bruta y para generar los datos.
 
-- **Nodo_Quadtree**:
+- ### Nodo_Quadtree:
   Esta clase define a un nodo del árbol y los métodos para realizar las consultas, Los nodos en sí son cuadrantes del árbol, solo que unos guardan puntos (cuando son hojas) y señalan a sus 4  hijos cuando se dividen. Las coordenadas y dimensiones de los nodos están en metros 
   
   Un `nodo` tiene:
@@ -92,12 +92,12 @@ En este archivo se hicieron las pruebas para verificar el funcionamiento del Qua
   Se hizo un Quadtree de 20000 x20000 y se estableció un radio de 500.
   Se generaron los puntos y se insertaron en el árbol con un contador por cada punto insertado, y se verificó que el número de puntos generados coincidiera con los del contador.
   
-<img width="497" height="125" alt="image" src="https://github.com/user-attachments/assets/b6159a4f-a46d-4356-9a33-82fc03e1ee41" />
+  <img width="497" height="125" alt="image" src="https://github.com/user-attachments/assets/b6159a4f-a46d-4356-9a33-82fc03e1ee41" />
 
   Luego, se realizan 100 búsquedas de radio, con puntos de consulta aleatorios. Se realiza tanto en el árbol como con fuerza bruta. Se comparan los resultados de las dos listas que retorna cada estructura y si son iguales, pasa la prueba.
   
-<img width="635" height="43" alt="image" src="https://github.com/user-attachments/assets/ffa69be7-66e9-4b7d-a0f6-3a2a06a8262a" />
+    <img width="635" height="43" alt="image" src="https://github.com/user-attachments/assets/ffa69be7-66e9-4b7d-a0f6-3a2a06a8262a" />
 
   Finalmente, se hace la búsqueda del vecino más cercano a 100 puntos de consulta con las dos estructuras. Y si coinciden en cada búsqueda, pasa la prueba.
 
-<img width="537" height="45" alt="image" src="https://github.com/user-attachments/assets/ff1cb075-b731-45dc-b4ab-42a27850c839" />
+    <img width="537" height="45" alt="image" src="https://github.com/user-attachments/assets/ff1cb075-b731-45dc-b4ab-42a27850c839" />
