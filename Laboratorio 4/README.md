@@ -15,7 +15,7 @@ Se tiene coordenadas de entrega (x,y) de 10.000 puntos de entrega por lo que se 
 Aquí se implementó el Quadtree para dos dimensiones, las funciones para la fuerza bruta y para generar los datos.
 
 - **Nodo_Quadtree**:
-  Esta clase define a un nodo del árbol y los métodos para realizar las consultas, Los nodos en sí son cuadrantes del árbol, solo que unos guardan puntos (cuando son hojas) y señalan a sus 4  hijos cuando se dividen.
+  Esta clase define a un nodo del árbol y los métodos para realizar las consultas, Los nodos en sí son cuadrantes del árbol, solo que unos guardan puntos (cuando son hojas) y señalan a sus 4  hijos cuando se dividen. Las coordenadas y dimensiones de los nodos están en metros 
   
   Un `nodo` tiene:
   * Coordenada x
@@ -83,3 +83,21 @@ La clase tiene los siguientes métodos:
      Los puntos aleatorios se generan con distribución gaussiana (`random.gauss`), de modo que los puntos tienen 70% de probabilidad de caer alrededor de unos barrios predefinidos:  *barrios = [(8000, 8000), (32000, 8000), (20000, 20000), (32000, 32000)]*
      Ya que en la vida real, la distribución de los lugares no suele ser uniforme, sino que suelen estar más concentrados en unos lados.
   
+## 3. Test `test.py`
+En este archivo se hicieron las pruebas para verificar el funcionamiento del Quadtree y las funciones para generar las gráficas del árbol.
+
+- **`prueba_coincidir`**:
+  Esta es una función que se realizó para verificar que los resultados fueran iguales con fuerza bruta y el Quadtree.
+  
+  Se hizo un Quadtree de 20000 x20000 y se estableció un radio de 500.
+  Se generaron los puntos y se insertaron en el árbol con un contador por cada punto insertado, y se verificó que el número de puntos generados coincidiera con los del contador.
+  
+<img width="497" height="125" alt="image" src="https://github.com/user-attachments/assets/b6159a4f-a46d-4356-9a33-82fc03e1ee41" />
+
+  Luego, se realizan 100 búsquedas de radio, con puntos de consulta aleatorios. Se realiza tanto en el árbol como con fuerza bruta. Se comparan los resultados de las dos listas que retorna cada estructura y si son iguales, pasa la prueba.
+  
+<img width="635" height="43" alt="image" src="https://github.com/user-attachments/assets/ffa69be7-66e9-4b7d-a0f6-3a2a06a8262a" />
+
+  Finalmente, se hace la búsqueda del vecino más cercano a 100 puntos de consulta con las dos estructuras. Y si coinciden en cada búsqueda, pasa la prueba.
+
+<img width="537" height="45" alt="image" src="https://github.com/user-attachments/assets/ff1cb075-b731-45dc-b4ab-42a27850c839" />
