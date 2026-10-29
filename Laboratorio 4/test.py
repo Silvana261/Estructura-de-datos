@@ -196,8 +196,8 @@ def graficar_radio(puntos, centro_x, centro_y, radio, encontrados, nombre_archiv
     plt.savefig(nombre_archivo, dpi=150, bbox_inches="tight")
     plt.close()
     
-def graficar_vecino(puntos, x_consulta, y_consulta, vecino, nombre_archivo,titulo="", raiz=None):
-
+def graficar_vecino(puntos, x_consulta, y_consulta, resultado_vecino, nombre_archivo, titulo="", raiz=None):
+   
     figura, eje = plt.subplots(figsize=(8, 8))
     
     if raiz is not None:
@@ -209,7 +209,11 @@ def graficar_vecino(puntos, x_consulta, y_consulta, vecino, nombre_archivo,titul
     eje.scatter(xs, ys, color="lightgray", s=tamano_punto(puntos), label="Puntos")
     eje.scatter([x_consulta], [y_consulta], color="blue", marker="x", label="Consulta")  
 
-    if vecino is not None:
+    vecino = None
+    distancia = 0.0
+
+    if resultado_vecino is not None:
+        vecino, distancia = resultado_vecino  
         eje.scatter([vecino[0]], [vecino[1]], color="magenta", s=tamano_punto(puntos) * 3, label="Vecino más cercano")
         eje.plot([x_consulta, vecino[0]], [y_consulta, vecino[1]], color="red", linestyle="--")
 
@@ -219,14 +223,21 @@ def graficar_vecino(puntos, x_consulta, y_consulta, vecino, nombre_archivo,titul
     else:
         eje.set_xlabel(f"Cantidad de puntos: {len(puntos)}")
 
-    # Mostrar siempre el punto de consulta y el resultado, incluso con muchos puntos.
+    # Construir el texto con formato de 2 decimales
     texto_consulta = f"Punto de consulta: ({x_consulta:.2f}, {y_consulta:.2f})"
-    texto_vecino = f"Vecino más cercano: {vecino}"
-    eje.text(0.02, 0.98, texto_consulta + "\n" + texto_vecino,
+    
+    if vecino is not None:
+        texto_vecino = f"Vecino más cercano: ({vecino[0]:.2f}, {vecino[1]:.2f})"
+        texto_distancia = f"Distancia: {distancia:.2f} m"
+        texto_completo = f"{texto_consulta}\n{texto_vecino}\n{texto_distancia}"
+    else:
+        texto_completo = f"{texto_consulta}\nVecino más cercano: No encontrado"
+
+    eje.text(0.02, 0.98, texto_completo,
              transform=eje.transAxes, verticalalignment="top", fontsize=9,
              bbox=dict(boxstyle="round", facecolor="white", alpha=0.85))
 
-    eje.legend(loc = "upper right")
+    eje.legend(loc="upper right")
     plt.savefig(nombre_archivo, dpi=150)
     plt.close()
 
@@ -249,10 +260,10 @@ def graficas_pequenas():
     graficar_radio(PUNTOS_PEQUENOS, 3, 2, 5, encontrados, "graficas/radio_pequeno_p3.png", "Centro (3,2), radio 5", raiz=arbol)
 
     vecino = arbol.vecino_mas_cercano(6, 3)
-    graficar_vecino(PUNTOS_PEQUENOS, 6, 3, vecino[0], "graficas/vecino_pequeno_p1.png", "Vecino de (6,3)", raiz=arbol)
+    graficar_vecino(PUNTOS_PEQUENOS, 6, 3, vecino, "graficas/vecino_pequeno_p1.png", "Vecino de (6,3)", raiz=arbol)
 
     vecino = arbol.vecino_mas_cercano(0,0)
-    graficar_vecino(PUNTOS_PEQUENOS, 0, 0, vecino[0], "graficas/vecino_pequeno_p2.png", "Vecino de (0,0)", raiz=arbol)
+    graficar_vecino(PUNTOS_PEQUENOS, 0, 0, vecino, "graficas/vecino_pequeno_p2.png", "Vecino de (0,0)", raiz=arbol)
 
 
 # GRÁFICAS GRANDES (ciudad de 40000 x 40000 m y 10000 puntos) y para una muestra de 400 puntos
@@ -285,9 +296,7 @@ def graficas_grandes():
     y_consulta = random.uniform(0, tamano)
     vecino = raiz.vecino_mas_cercano(x_consulta, y_consulta) # Se llama al método que busca al vecino más cercano
 
-    graficar_vecino(puntos, x_consulta, y_consulta, vecino[0],
-                    "graficas/vecino_mas_cercano.png",
-                    "Vecino más cercano (consulta aleatoria)", raiz=raiz)
+    graficar_vecino(puntos, x_consulta, y_consulta, vecino,"graficas/vecino_mas_cercano.png","Vecino más cercano (consulta aleatoria)", raiz=raiz)
 
     # Se hace también un árbol más pequeño con 400 puntos, para visualizar mejor el QuadTree
     tamano_muestra = 20000  # Será una ciudad de 20000 x 20000 metros
