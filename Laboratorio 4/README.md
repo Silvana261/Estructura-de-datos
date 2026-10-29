@@ -51,17 +51,35 @@ La clase tiene los siguientes métodos:
   
   Si el nodo ya es interno, calcula con indice_hijo a cuál hijo pertenece el punto y llama recursivamente a insertar_punto en ese hijo. Devuelve el resultado de esa inserción.
 
+
 * `verificar_si_se_cruza`:
   Función auxiliar que comprueba si el rango rectangular buscado (x_min, y_min, x_max, y_max) se solapa con la región que cubre el nodo. Lo hace eje por eje: en cada uno, el inicio del nodo debe ser menor que el fin de la consulta, y el inicio de la consulta menor que el fin del nodo. Devuelve True solo si hay solape en X y en Y a la vez. Se usa en consultar_rango para podar: si no se cruzan, se descarta el nodo y todo su subárbol sin revisar ninguno de sus puntos.
 
 * `consultar_rango`:
   Sirve para encontrar los puntos dentro de un rango específico ( un rectángulo ). Primero se verifica si las dimensiones del rectángulo del rango se cruza con el nodo, con la función anterior, si no es así, se descarta todo ese sub árbol. Si se cruzan, Se llama recursivamente la función para recorrer los hijos de los nodos hasta llegar a las hojas y devolver los puntos obtenidos en una lista.
 
+
 * `consultar_en_radio`:
   Para encontrar los puntos en un radio, se calcula las coordenadas del rectángulo mínimo que contiene al círculo de la consulta, luego con la función (`consultar_rango`) se sacan los puntos candidatos. Luego, se calcula la distancia euclidiana de los puntos candidatos y el punto de la consulta, la cual debe ser menor o igual al radio para estar adentro, y estos serían los puntos rsultantes.
 
 
 * `distancia_minima_a_cuadro`:
+  Calcula la distancia entre un punto y el lado más cercano a este, para la búsqueda del vecino más cercano.
+
+* `vecino_mas_cercano`:
+  Busca el punto más cercano a una ubicación dada. Mantiene una lista mejor = [punto, distancia] compartida entre todas las llamadas recursivas, que al inicio está vacía. En cada nodo, si ya existe un mejor punto, calcula con distancia_minima_a_cuadro la distancia mínima de la consulta a ese nodo; si no mejora la mejor distancia, descarta el nodo y todo su subárbol. Si el nodo es una hoja con un punto, calcula la distancia euclidiana y, si es menor que la mejor, actualiza mejor. Si es un nodo interno, visita primero el hijo donde cae la consulta (con indice_hijo) y luego los otros tres, que casi siempre se descartan por la poda. Al terminar, devuelve [punto, distancia] con el vecino más cercano.
+
+- ### Fuerza bruta:
+  Se trabaja con una lista. Para buscar los puntos dentro de un radio, se recorre toda la lista calculando la distancia euclidiana entre el punto y el de la consulta. Y para el vecino más cercano, también recorre todos los puntos hasta encontrar la menor distancia.
+
+- ### Funciones para generar puntos:
+
   
+  * `generar_puntos_uniformes`:
+    Se generan las coordenadas de los puntos aleatoriamente, todos tienen las misma probabilidad de caer en cualquier lado del quadtree
+
   
+   * `generar_puntos_realistas`:
+     Los puntos aleatorios se generan con distribución gaussiana (`random.gauss`), de modo que los puntos tienen 70% de probabilidad de caer alrededor de unos barrios predefinidos:  *barrios = [(8000, 8000), (32000, 8000), (20000, 20000), (32000, 32000)]*
+     Ya que en la vida real, la distribución de los lugares no suele ser uniforme, sino que suelen estar más concentrados en unos lados.
   
