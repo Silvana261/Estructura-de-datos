@@ -5,10 +5,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import Quadtree
 
-TAMANO = 20000                  # ciudad de 20000 x 20000 metros
+TAMANO = 40000                  # ciudad de 20000 x 20000 metros
 RADIO = 500                     # Las búsquedas por radio serán de 500 metros
 DISPERSION = 1500               # metros (desviación estándar de los barrios)
-TAMANOS = [10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000]   # valores de N (número de puntos)
+TAMANOS = [10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000,40000]   # valores de N (número de puntos)
 CONSULTAS = 200                 # consultas por cada N (se promedia)
 REPETICIONES = 50               # Número de repeticiones de cada experimento
 
