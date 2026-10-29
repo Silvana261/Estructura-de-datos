@@ -10,7 +10,7 @@ RADIO = 500                     # Las búsquedas por radio serán de 500 metros
 DISPERSION = 1500               # metros (desviación estándar de los barrios)
 TAMANOS = [10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000]   # valores de N (número de puntos)
 CONSULTAS = 200                 # consultas por cada N (se promedia)
-REPETICIONES = 30               # Número de repeticiones de cada experimento
+REPETICIONES = 50               # Número de repeticiones de cada experimento
 
 #  FUNCIONES AUXILIARES 
 
