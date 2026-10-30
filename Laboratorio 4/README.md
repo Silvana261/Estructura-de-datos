@@ -37,6 +37,7 @@ La clase tiene los siguientes métodos:
   * hijo_Noroeste: arriba a la izquierda
   * hijo_Sureste: abajo a la derecha
   * hijo_Suroeste: abajo a la izquierda
+
  Y se guardan en una lista en ese mismo orden
 
 * `indice_hijo`:
@@ -89,15 +90,89 @@ En este archivo se hicieron las pruebas para verificar el funcionamiento del Qua
 - **`prueba_coincidir`**:
   Esta es una función que se realizó para verificar que los resultados fueran iguales con fuerza bruta y el Quadtree.
   
-  Se hizo un Quadtree de 20000 x20000 y se estableció un radio de 500.
+  Se hizo un Quadtree de **20000 x20000** y se estableció un radio de **500**.
   Se generaron los puntos y se insertaron en el árbol con un contador por cada punto insertado, y se verificó que el número de puntos generados coincidiera con los del contador.
   
   <img width="497" height="125" alt="image" src="https://github.com/user-attachments/assets/b6159a4f-a46d-4356-9a33-82fc03e1ee41" />
 
   Luego, se realizan 100 búsquedas de radio, con puntos de consulta aleatorios. Se realiza tanto en el árbol como con fuerza bruta. Se comparan los resultados de las dos listas que retorna cada estructura y si son iguales, pasa la prueba.
+
+
   
     <img width="635" height="43" alt="image" src="https://github.com/user-attachments/assets/ffa69be7-66e9-4b7d-a0f6-3a2a06a8262a" />
 
   Finalmente, se hace la búsqueda del vecino más cercano a 100 puntos de consulta con las dos estructuras. Y si coinciden en cada búsqueda, pasa la prueba.
 
     <img width="537" height="45" alt="image" src="https://github.com/user-attachments/assets/ff1cb075-b731-45dc-b4ab-42a27850c839" />
+
+
+- ### Pruebas unitarias:
+
+  Se hicieron funciones auxiliares para hacer pruebas específicas:
+  Usan un quadtree pequeño de **10 × 10 metros** con 10 puntos de entrega, para poder verificar a mano cada resultado esperado:
+  
+  `PUNTOS_PEQUENOS = [(1, 1), (6, 2), (2, 3), (3, 1), (5, 5),(7, 6), (8, 2), (4, 7), (1, 8), (9, 9)]`
+
+  Cada prueba se verificó con `assert`, con el cual, si el resultado no coincide, el programa para e indica en donde ocurrió el error.
+
+  * #### **prueba_insercion**:
+    
+    En esta prueba se insertan todos los puntos de la lista, los cuales deben ser exitosa su inserción. También se verificó que la inserción de los siguientes puntos fuera falsa:
+    
+    * El punto `(11,11)` no entra porque está por fuera
+    * El punto `(12,4)` no entra porque está por fuera por el eje X
+    * El punto `(6,11)` no entra porque está por fuera por el eje Y
+    * El punto `(1,1)`  es un duplicado.
+
+   **Resultado en consola**     
+  <img width="459" height="201" alt="image" src="https://github.com/user-attachments/assets/1ef3fa4d-1172-4488-8582-ffe1a16e56b9" />
+
+    **Gráfico del árbol**
+    <img width="1200" height="1200" alt="image" src="https://github.com/user-attachments/assets/6ad1e5a9-6792-4f45-b822-997a34195252" />
+    
+
+  * #### **prueba_radio**:
+    
+    Se utiliza el mismo árbol producido anteriormente.
+    Igualmente, se verificó con `assert` los resultados y de manera visual
+    
+    <img width="569" height="277" alt="image" src="https://github.com/user-attachments/assets/ce6a94da-25eb-4052-bbc6-c7c7a9faa700" />
+
+    * Los puntos a un radio de 2 metros del punto `(6,3)` es `(6,2)`
+
+    <img width="1001" height="1114" alt="image" src="https://github.com/user-attachments/assets/4b86a096-bae0-46b3-8e8d-134db836a113" />
+  
+    * Los puntos a un radio de 2 metros del punto `(2,2)` son `(1,1)`, `(2,3)`, `(3,1)`
+
+    <img width="1001" height="1114" alt="image" src="https://github.com/user-attachments/assets/e56931d5-7cb0-43ed-9dc3-28ba37864e37" />
+
+    * Los puntos a un radio de 4 metros del punto `(3,2)` son  `(4,7)`, `(5,5)`, `(7,6)`
+  
+    <img width="1005" height="1136" alt="image" src="https://github.com/user-attachments/assets/c7207c9d-2d6e-424a-b172-6176b9e67c96" />
+
+    * Y no hay puntos a un radio de 0.5 metros del punto `(5,1)`
+      
+    <img width="1001" height="1092" alt="image" src="https://github.com/user-attachments/assets/9b449b93-7d64-4b07-ac9c-49a788791874" />
+
+
+  * #### **prueba_vecino**:
+    Se realiza con el mismo árbol para los siguientes puntos:
+     <img width="417" height="272" alt="image" src="https://github.com/user-attachments/assets/10c198ff-3e7b-44b1-93ad-eea717672a37" />
+
+    
+    * El vecino más cercano de `(6,3)` es  `(6,2)`
+      <img width="1200" height="1200" alt="image" src="https://github.com/user-attachments/assets/dd79c6cd-ce7a-4b8a-a88c-9a0e827f4e1a" />
+      La distancia es un metro
+ 
+      
+    * El vecino más cercano de `(0,0)` es `(1,1)`
+ 
+      <img width="1200" height="1200" alt="image" src="https://github.com/user-attachments/assets/2ff4e8a9-a75d-4da9-a068-4ca86725c0c4" />
+      La distancia es 1.41 metros
+ 
+      
+    * El vecino más cercano de `(5.6,9)` es  `(4,7)`
+   
+      <img width="1200" height="1200" alt="image" src="https://github.com/user-attachments/assets/afb64d31-c780-440e-a29b-698fe69d79e3" />
+      La distancia es 2.56 metros
+    
