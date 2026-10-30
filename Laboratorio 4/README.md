@@ -87,7 +87,7 @@ La clase tiene los siguientes métodos:
 ## 3. Test `test.py`
 En este archivo se hicieron las pruebas para verificar el funcionamiento del Quadtree y las funciones para generar las gráficas del árbol.
 
-- **`prueba_coincidir`**:
+- ### **`prueba_coincidir`**:
   Esta es una función que se realizó para verificar que los resultados fueran iguales con fuerza bruta y el Quadtree.
   
   Se hizo un Quadtree de **20000 x20000** y se estableció un radio de **500**.
@@ -96,7 +96,6 @@ En este archivo se hicieron las pruebas para verificar el funcionamiento del Qua
   <img width="497" height="125" alt="image" src="https://github.com/user-attachments/assets/b6159a4f-a46d-4356-9a33-82fc03e1ee41" />
 
   Luego, se realizan 100 búsquedas de radio, con puntos de consulta aleatorios. Se realiza tanto en el árbol como con fuerza bruta. Se comparan los resultados de las dos listas que retorna cada estructura y si son iguales, pasa la prueba.
-
 
   
     <img width="635" height="43" alt="image" src="https://github.com/user-attachments/assets/ffa69be7-66e9-4b7d-a0f6-3a2a06a8262a" />
@@ -115,7 +114,7 @@ En este archivo se hicieron las pruebas para verificar el funcionamiento del Qua
 
   Cada prueba se verificó con `assert`, con el cual, si el resultado no coincide, el programa para e indica en donde ocurrió el error.
 
-  * #### **prueba_insercion**:
+  * ### **prueba_insercion**:
     
     En esta prueba se insertan todos los puntos de la lista, los cuales deben ser exitosa su inserción. También se verificó que la inserción de los siguientes puntos fuera falsa:
     
@@ -131,7 +130,7 @@ En este archivo se hicieron las pruebas para verificar el funcionamiento del Qua
     <img width="1200" height="1200" alt="image" src="https://github.com/user-attachments/assets/6ad1e5a9-6792-4f45-b822-997a34195252" />
     
 
-  * #### **prueba_radio**:
+  * ### **prueba_radio**:
     
     Se utiliza el mismo árbol producido anteriormente.
     Igualmente, se verificó con `assert` los resultados y de manera visual
@@ -146,7 +145,7 @@ En este archivo se hicieron las pruebas para verificar el funcionamiento del Qua
 
     <img width="1001" height="1114" alt="image" src="https://github.com/user-attachments/assets/e56931d5-7cb0-43ed-9dc3-28ba37864e37" />
 
-    * ### Los puntos a un radio de 4 metros del punto `(3,2)` son  `(4,7)`, `(5,5)`, `(7,6)`
+    * ### Los puntos a un radio de 4 metros del punto `(3,2)` son  `(4,7)`, `(5,5)`, `(7,6)`, (5, 5), (6, 2)
   
     <img width="1005" height="1136" alt="image" src="https://github.com/user-attachments/assets/c7207c9d-2d6e-424a-b172-6176b9e67c96" />
 
@@ -155,7 +154,7 @@ En este archivo se hicieron las pruebas para verificar el funcionamiento del Qua
     <img width="1001" height="1092" alt="image" src="https://github.com/user-attachments/assets/9b449b93-7d64-4b07-ac9c-49a788791874" />
 
 
-  * #### **prueba_vecino**:
+  * ### **prueba_vecino**:
  
     
     Se realiza con el mismo árbol para los siguientes puntos:
