@@ -290,7 +290,9 @@ La fuerza bruta tiene una pendiente log-log de **0.99**, como se espera de un co
 La pendiente del quadtree fue de **0.13**  que concuerda con el costo computacional de **O(log(N))**
 
 
-### Limitaciones
+
+
+## Limitaciones
 
 - Los tiempos dependen de la máquina y de Python (intérprete), por lo que importa la **tendencia** y las pendientes, no los valores absolutos.
 - En el quadtree el costo de una consulta depende de la **densidad local**, por eso la desviación entre consultas es grande: una consulta en un barrio denso devuelve muchos puntos, y una en una zona vacía casi ninguno.
