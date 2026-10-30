@@ -38,7 +38,7 @@ def prueba_coincidir():
         resultado_arbol = sorted(raiz.consultar_en_radio(centro_x, centro_y, RADIO))        # Las listas que retornan las dos funciones se ordenan para poder comparar
         resultado_bruta = sorted(Quadtree.busqueda_radio_fuerza_bruta(puntos, centro_x, centro_y, RADIO))
         assert resultado_arbol == resultado_bruta, f" Difieren en el punto ({centro_x}, {centro_y})"   # Con assert se verifica que los dos resultados coincidan, si no se muestra el punto del problema
-    print("\nLas 100 consultas coinciden con fuerza bruta y el árbol")
+    print("\nLas 100 consultas por radio coinciden con fuerza bruta y el árbol")
 
     # Ahora comparar si coinciden los resultados en la búsqueda del vecino más cercano
     for i in range(100):                        # Se hacen 100 búsquedas del vecino más cercano
@@ -79,7 +79,7 @@ def prueba_radio():
 
     assert quadtree.consultar_en_radio(6, 3, 2) == [(6, 2)]  # En cada consulta al radio, se verifica que coincidan los puntos que retorna la función con los que debería ser 
     assert sorted(quadtree.consultar_en_radio(2, 2, 2)) == [(1, 1), (2, 3), (3, 1)]
-    assert sorted(quadtree.consultar_en_radio(5, 5, 3)) == [(4, 7), (5, 5), (7, 6)]
+    assert sorted(quadtree.consultar_en_radio(3, 2, 4)) == [(1, 1), (2, 3), (3, 1), (5, 5), (6, 2)]
     assert quadtree.consultar_en_radio(5, 1, 0.5) == []
 
     print("\nTodas las pruebas de búsqueda a un radio fueron exitosas")
@@ -90,7 +90,7 @@ def prueba_vecino():
     # De la lista que devuelve este método en la posición 0, está el punto
     assert quadtree.vecino_mas_cercano(6, 3)[0] == (6, 2)
     assert quadtree.vecino_mas_cercano(0, 0)[0] == (1, 1)
-
+    assert quadtree.vecino_mas_cercano(5.6, 9)[0] == (4, 7)
     print("\nPrueba del vecino más cercano exitosa")
 
 # Función para escoger la prueba unitaria a realizar 
@@ -256,14 +256,20 @@ def graficas_pequenas():
     encontrados = arbol.consultar_en_radio(2, 2, 2)
     graficar_radio(PUNTOS_PEQUENOS, 2, 2, 2, encontrados, "graficas/radio_pequeno_p2.png", "Centro (2,2), radio 2", raiz=arbol)
 
-    encontrados = arbol.consultar_en_radio(3, 2, 5)
-    graficar_radio(PUNTOS_PEQUENOS, 3, 2, 5, encontrados, "graficas/radio_pequeno_p3.png", "Centro (3,2), radio 5", raiz=arbol)
+    encontrados = arbol.consultar_en_radio(3, 2, 4)
+    graficar_radio(PUNTOS_PEQUENOS, 3, 2, 4, encontrados, "graficas/radio_pequeno_p3.png", "Centro (3,2), radio 4", raiz=arbol)
 
+    encontrados = arbol.consultar_en_radio(5, 1, 0.5)
+    graficar_radio(PUNTOS_PEQUENOS, 5, 1, 0.5, encontrados, "graficas/radio_pequeno_p4.png", "Centro (5,5), radio 0.5", raiz=arbol)
+    (5, 5, 3)
     vecino = arbol.vecino_mas_cercano(6, 3)
     graficar_vecino(PUNTOS_PEQUENOS, 6, 3, vecino, "graficas/vecino_pequeno_p1.png", "Vecino de (6,3)", raiz=arbol)
 
     vecino = arbol.vecino_mas_cercano(0,0)
     graficar_vecino(PUNTOS_PEQUENOS, 0, 0, vecino, "graficas/vecino_pequeno_p2.png", "Vecino de (0,0)", raiz=arbol)
+    
+    vecino = arbol.vecino_mas_cercano(5.6, 9)
+    graficar_vecino(PUNTOS_PEQUENOS,5.6, 9, vecino, "graficas/vecino_pequeno_p3.png", "Vecino de (5.6,9)", raiz=arbol)
 
 
 # GRÁFICAS GRANDES (ciudad de 40000 x 40000 m y 10000 puntos) y para una muestra de 400 puntos
