@@ -201,7 +201,7 @@ En este archivo se realizan 4 experimentos para comparar el rendimiento del Quad
 
 ### Parámetros:
 
-* **TAMANO** = 40.000. Largo y ancho de la ciudad
+* **TAMANO (N)** = 40.000. Largo y ancho de la ciudad
 * **RADIO** = 500 m. Radio para todas las búsquedas por radio
 * **DISPERSION** = 1.500 m. Desviación estándar de cada barrio para la generación de datos realistas
 * **TAMANOS** = [10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000,40000]. Los distintos tamaños de puntos
@@ -216,5 +216,70 @@ Se usa `time.perf_counter()`, que es el reloj de mayor resolución disponible en
 
 Para cada tamaño N se construyen árboles con puntos generados de forma uniforme y con puntos generados de forma realista (con barrios). En cada árbol se calcula la profundidad máxima, es decir, la cantidad de niveles de la rama más larga. Este proceso se repite 50 veces por cada N, generando puntos nuevos en cada repetición, y se calculan el promedio y la desviación estándar de la profundidad. Los resultados se grafican en función de N, con el valor promedio escrito sobre cada punto y las barras de error con ± 1 desviación estándar.
 
-<img width="1145" height="884" alt="image" src="https://github.com/user-attachments/assets/817dabd8-de94-4ca0-a0d8-4fcadbe307d5" />
+<img width="1145" height="884" alt="97825f5b-877f-487f-a5f1-491199ef9442" src="https://github.com/user-attachments/assets/4bc2b0ad-554f-4bbd-846b-047998b6e6e0" />
+
+### Interpretación:
+
+Con la distribución uniforme se generan árboles menos profundos que con la realista, porque la concentración de puntos en los barrios obliga a subdividir más veces para dejar un punto por hoja. 
+
+La profundidad promedio de un Quadtre es **log2(N)**, lo que representa una pendiente aproximadamente de **3.32**. Las pendientes medidas fueron 3,30 (uniforme) y 3,31 (realista), prácticamente iguales a la teórica.
+
+### Gráficos 
+
+<img width="1200" height="1200" alt="223b614e-98a1-4c98-95c6-9d765a9e0fcd" src="https://github.com/user-attachments/assets/a48f816b-f034-489f-b022-4ca25ff00d96" />
+
+
+<img width="1200" height="1200" alt="42548015-5f0d-460b-926a-f99d0c4924be" src="https://github.com/user-attachments/assets/4774fb34-ccdb-48be-965e-c44efac8e984" />
+
+### `EXPERIMENTO 2: INSERCIÓN`
+
+Para cada tamaño de N se generan puntos con distribución realista una sola vez, y con esos mismos puntos se construyen las dos estructuras. Cada construcción se repite 50 veces, se mide el tiempo y se calcula el promedio y desviación estándar de las repeticiones. 
+
+<img width="1053" height="825" alt="image" src="https://github.com/user-attachments/assets/9d5c1419-0586-4e65-9ed2-fb88f176f68e" />
+
+### Interpretación:
+
+En cuanto a la inserción, el quadtree es más lento que la lista en todos los N probados. La lista es mucho más eficiente a la hora de insertar
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Limitaciones
+
+- Los tiempos dependen de la máquina y de Python (intérprete), por lo que importa la **tendencia** y las pendientes, no los valores absolutos.
+- En el quadtree el costo de una consulta depende de la **densidad local**, por eso la desviación entre consultas es grande: una consulta en un barrio denso devuelve muchos puntos, y una en una zona vacía casi ninguno.
+- La inserción en la lista (`append`) es casi gratuita, así que el quadtree no puede ganar ese experimento. Su costo de construcción se compensa en las consultas.
+
 
