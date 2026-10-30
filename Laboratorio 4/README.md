@@ -178,7 +178,7 @@ En este archivo se hicieron las pruebas para verificar el funcionamiento del Qua
    
       <img width="1200" height="1200" alt="image" src="https://github.com/user-attachments/assets/afb64d31-c780-440e-a29b-698fe69d79e3" />
 
-Con el fin de analizar el comportamiento del Quadtree y resolver la pregunta del problema, se obtuvo la siguiente visualización:
+**Con el fin de analizar el comportamiento del Quadtree y resolver la pregunta del problema, se obtuvo la siguiente visualización:**
 
 
 ### Inserción
@@ -189,10 +189,10 @@ Con el fin de analizar el comportamiento del Quadtree y resolver la pregunta del
 
 ### Búsqueda por radio
 <img width="1040" height="1137" alt="image" src="https://github.com/user-attachments/assets/0471620b-a3c1-4a83-9bc3-f479cb606b8e" />
-
-''' Se generó una búsqueda aleatoria para buscar los puntos a un radio de 500 metros.
-Entonces desde el punto `(14191.9, 8701.51)` a un radio de 500 metros están los puntos de   entrega: `(13934.8, 8964.2)`, `(14291.4, 8502.5)`, `(14378.5, 8267.2)`, `(14490.6, 8672.1)`, `(14552.7, 8601.5)`
-
+```text
+Se generó una búsqueda aleatoria para buscar los puntos a un radio de 500 metros.
+Entonces desde el punto `(14191.9, 8701.51)` a un radio de 500 metros están los puntos de   entrega: `(13934.8, 8964.2)`, `(14291.4, 8502.5)`, `(14378.5, 8267.2)`, `(14490.6, 8672.1)`, `(14552.7, 8601.5)` 
+```
 
 ### Vecino más cercano 
 <img width="1200" height="1200" alt="image" src="https://github.com/user-attachments/assets/d83353fd-0fe8-4a77-ac8f-d663642ff140" />
