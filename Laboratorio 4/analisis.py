@@ -5,12 +5,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import Quadtree
 
-TAMANO = 40000                  # ciudad de 20000 x 20000 metros
+TAMANO = 40000                  # ciudad de 40000 x 40000 metros
 RADIO = 500                     # Las búsquedas por radio serán de 500 metros
 DISPERSION = 1500               # metros (desviación estándar de los barrios)
 TAMANOS = [10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000,40000]   # valores de N (número de puntos)
 CONSULTAS = 200                 # consultas por cada N (se promedia)
-REPETICIONES = 50               # Número de repeticiones de cada experimento
+REPETICIONES = 50               # Número de repeticiones de en el experimento de inserción
 
 #  FUNCIONES AUXILIARES 
 
@@ -77,6 +77,10 @@ def pendiente(tamanos_n, tiempos):     # Pendiente de la recta en escala log-log
     logs_t = [np.log10(t) for t in tiempos]
     return np.polyfit(logs_n, logs_t, 1)[0]  # Calcula la pendiente logarítmica con polyfit
 
+def pendiente_profundidad(tamanos_n, profundidades):   # Niveles que sube la profundidad cada vez que N se multiplica por 10
+    logs_n = [np.log10(n) for n in tamanos_n]          # Solo x es logarítmico, y es lineal
+    return np.polyfit(logs_n, profundidades, 1)[0]
+
 def barras_error(medias_, desvs):
     # En escala log no puede haber barras que lleguen a 0 o negativo: se limita la inferior
     inferior = [min(d, m * 0.99) for m, d in zip(medias_, desvs)]
@@ -129,11 +133,14 @@ def graficar_loglog(tamanos_n, bruta, arbol, titulo, ylabel, archivo):
 
 def graficar_profundidad(tamanos_n, uniforme, realista, archivo):
     # uniforme y realista son listas de (media, desviación)
+    m_uniforme = pendiente_profundidad(tamanos_n, medias(uniforme))
+    m_realista = pendiente_profundidad(tamanos_n, medias(realista))
+
     figura, eje = plt.subplots(figsize=(9, 6))
     eje.errorbar(tamanos_n, medias(uniforme), yerr=desviaciones(uniforme), fmt="o-", color="green",
-                 capsize=3, label="Uniforme")
+                 capsize=3, label=f"Uniforme (pendiente = {m_uniforme:.2f})")
     eje.errorbar(tamanos_n, medias(realista), yerr=desviaciones(realista), fmt="s-", color="purple",
-                 capsize=3, label="Realista (barrios)")
+                 capsize=3, label=f"Realista (pendiente = {m_realista:.2f})")
     eje.set_xscale("log")
 
     # Valor medio escrito sobre cada punto
