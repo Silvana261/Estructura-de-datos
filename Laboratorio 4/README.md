@@ -235,14 +235,50 @@ La profundidad promedio de un Quadtre es **log2(N)**, lo que representa una pend
 
 Para cada tamaño de N se generan puntos con distribución realista una sola vez, y con esos mismos puntos se construyen las dos estructuras. Cada construcción se repite 50 veces, se mide el tiempo y se calcula el promedio y desviación estándar de las repeticiones. 
 
-<img width="1053" height="825" alt="image" src="https://github.com/user-attachments/assets/9d5c1419-0586-4e65-9ed2-fb88f176f68e" />
+<img width="1053" height="825" alt="image" src="https://github.com/user-attachments/assets/61b0dc9e-a6a7-436d-91e7-051f4cf4591e" />
+
 
 ### Interpretación:
 
-En cuanto a la inserción, el quadtree es más lento que la lista en todos los N probados. La lista es mucho más eficiente a la hora de insertar
+En cuanto a la inserción, el quadtree es más lento que la lista en todos los N probados. La lista es mucho más eficiente a la hora de insertar.
+
+La pendiente fue **1.06** para la lista lo cual coincide con la teoría donde se espera una pendiente aproximadamente de **1**, ya que tiene un costo **O(N). 
+
+Y la pendiente para el quadtree fue de **1.14** lo cual coincide con la teoría donde se espera una pendiente aproximadamente de **1.1** para que sea **O(NlogN)**.
 
 
+### `EXPERIMENTO 3: RADIO`
 
+Para cada tamaño de N se generan puntos con distribución realista una sola vez, y con ellos se construyen las dos estructuras. Luego, se generan 200 puntos de consulta y se buscan los puntos a un radio de 500 metros. Finalmente, se calcula el promedio y la desviación estándar de las 200 consultas de cada N.
+<img width="1053" height="825" alt="image" src="https://github.com/user-attachments/assets/18c96a68-60f9-4c37-a56a-afb7ba840a18" />
+
+
+### Interpretación:
+
+
+En la búsqueda por radio, el más eficiente fue el quadtree.
+La fuerza bruta tiene una pendiente de **0.99** como se espera de un costo **O(N)**, porque recorre todos los puntos.  El quadtree obtuvo una pendiente de **0.38**,  que es cerca de lo que se esperaba para un costo de **O(log(N))**.
+
+En este caso, a partir de N = 20 puntos, el Quadtree es más rápido de que la lista. Y antes eran casi igual de rápidos.
+
+Una posible causa de las desviaciones gigantes, es que como las consultas son puntos aleatorios, puede que hayan caído algunos en zonas muy pobladas, por lo que los puntos dentro del radio aumentaban mucho respecto a los que cayeron en puntos aislados.
+
+
+### `EXPERIMENTO 4: VECINO MÁS CERCANO`
+
+Para cada tamaño de N se usan los mismos puntos y las mismas estructuras del experimento anterior. Se utilizan los mismos 200 puntos de consultas aleatorias y en cada una se busca el vecino más cercano. Luego se promedia el tiempo que se demoraron las 200 consultas en cada N y se saca la desviación estándar 
+
+
+<img width="1053" height="823" alt="image" src="https://github.com/user-attachments/assets/7ab90fb8-67d9-461e-b85b-01149830f56a" />
+
+
+### Interpretación:
+
+En la búsqueda del vecino más cercano, al principio es más eficiente la lista para tamaños de N menores a 100 (pequeños), y partir de ahí el más eficiente es el quadtree, y la lista crece de manera lineal.
+
+La fuerza bruta tiene una pendiente log-log de **0.99**, como se espera de un costo **O(N)**, porque calcula la distancia a todos los puntos en cada consulta. 
+
+La pendiente del quadtree fue de **0.13**  que concuerda con el costo computacional de **O(log(N))**
 
 
 
