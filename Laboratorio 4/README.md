@@ -290,9 +290,6 @@ La fuerza bruta tiene una pendiente log-log de **0.99**, como se espera de un co
 La pendiente del quadtree fue de **0.13**  que concuerda con el costo computacional de **O(log(N))**
 
 
-
-
-
 ### Limitaciones
 
 - Los tiempos dependen de la máquina y de Python (intérprete), por lo que importa la **tendencia** y las pendientes, no los valores absolutos.
@@ -300,5 +297,10 @@ La pendiente del quadtree fue de **0.13**  que concuerda con el costo computacio
 - La inserción en la lista (`append`) es casi gratuita, así que el quadtree no puede ganar ese experimento. Su costo de construcción se compensa en las consultas.
 
 
+## Código de honor
 
-
+> [!IMPORTANT]
+> En el desarrollo de este laboratorio, se utilizó la IA solo cómo herramienta de apoyo y consulta para:
+> - Comprender los conceptos teóricos del Quadtree
+> - Entender el uso de la función `random.gauss` en la generación de puntos con distribución realista
+> - Consultar el funcionamiento e implementación de las librerías numpy y matplotlib para la representación gráfica de los resultados.
