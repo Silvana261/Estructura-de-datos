@@ -76,11 +76,13 @@ class Nodo_Quadtree:
             coordenada_x_punto_antiguo, coordenada_y_punto_antiguo = punto_antiguo   # Se sacan las coordenadas del punto antiguo
             
             indice_punto_antiguo = self.indice_hijo(coordenada_x_punto_antiguo, coordenada_y_punto_antiguo)     # Se calcula el índice donde se tiene que insertar en alguno de los hijos del Nodo
-            
             self.hijos[indice_punto_antiguo].insertar_punto(coordenada_x_punto_antiguo, coordenada_y_punto_antiguo)    # Se inserta en el Nodo hijo correspondiente al índice del punto antiguo, llamando recursivamente la función
             
-        indice_punto_nuevo = self.indice_hijo(coordenada_x_punto, coordenada_y_punto)   # Cuando se resuelve la inserción del punto antiguo, se calcula el índice del hijo al que pertenece el nuevo punto.
-        return self.hijos[indice_punto_nuevo].insertar_punto(coordenada_x_punto, coordenada_y_punto)   # Inserta el nuevo punto en ese hijo y se devuelve el resultado de la función
+            indice_nuevo = self.indice_hijo(coordenada_x_punto, coordenada_y_punto)  # Cuando se resuelve la inserción del punto antiguo, se calcula el índice del hijo al que pertenece el nuevo punto.
+            return self.hijos[indice_nuevo].insertar_punto(coordenada_x_punto, coordenada_y_punto)   # Inserta el nuevo punto en ese hijo y se devuelve el resultado de la función
+        else:
+            indice_punto_nuevo = self.indice_hijo(coordenada_x_punto, coordenada_y_punto)   # Si no es una hoja, se averigua en que hijo del nodo va
+            return self.hijos[indice_punto_nuevo].insertar_punto(coordenada_x_punto, coordenada_y_punto)   
 
 
     def verificar_si_se_cruza(self, x_min, y_min, x_max, y_max):    # Función auxiliar para verificar si el cuadrado con las dimensiones del rango buscado se cruza con el del Nodo que se está analizando
