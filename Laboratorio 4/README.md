@@ -178,4 +178,43 @@ En este archivo se hicieron las pruebas para verificar el funcionamiento del Qua
    
       <img width="1200" height="1200" alt="image" src="https://github.com/user-attachments/assets/afb64d31-c780-440e-a29b-698fe69d79e3" />
 
-    
+También se generó la gráfica para resolver la pregunta del problema:
+
+
+### Inserción
+<img width="1200" height="1200" alt="image" src="https://github.com/user-attachments/assets/72d81389-4c07-410c-a308-3ebdbe56428e" />
+
+### Búsqueda por radio
+<img width="1040" height="1137" alt="image" src="https://github.com/user-attachments/assets/0471620b-a3c1-4a83-9bc3-f479cb606b8e" />
+#### Se generó una búsqueda aleatoria para buscar los puntos a un radio de 500 metros
+
+### Vecino más cercano 
+<img width="1200" height="1200" alt="image" src="https://github.com/user-attachments/assets/d83353fd-0fe8-4a77-ac8f-d663642ff140" />
+#### Se generó la búsqueda del vecino más cercano aleatoriamente
+
+
+
+## 4.  `analisis.py`
+
+En este archivo se realizan 4 experimentos para comparar el rendimiento del Quadtree y la lista, a medida que aumenta el número de puntos. Además se hicieron funciones auxiliares para llamar a las funciones y métodos que generan los puntos, para calcular la profundidad del árbol, para llamar los métodos para construir el árbol, medir el tiempo y calcular desde que tamaño es mejor el Quadtree.
+
+
+### Parámetros:
+
+* **TAMANO** = 40.000. Largo y ancho de la ciudad
+* **RADIO** = 500 m. Radio para todas las búsquedas por radio
+* **DISPERSION** = 1.500 m. Desviación estándar de cada barrio para la generación de datos realistas
+* **TAMANOS** = [10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000,40000]. Los distintos tamaños de puntos
+* **CONSULTAS** = 200. Consultas por cada tamaño de TAMANOS
+* **REPETICIONES** = 50. Número de repeticiones de la construcción y medición de profundidad
+
+### Cómo se mide el tiempo
+
+Se usa `time.perf_counter()`, que es el reloj de mayor resolución disponible en Python.
+
+### `EXPERIMENTO 1: Profundidad del Quadtree`
+
+Para cada tamaño N se construyen árboles con puntos generados de forma uniforme y con puntos generados de forma realista (con barrios). En cada árbol se calcula la profundidad máxima, es decir, la cantidad de niveles de la rama más larga. Este proceso se repite 50 veces por cada N, generando puntos nuevos en cada repetición, y se calculan el promedio y la desviación estándar de la profundidad. Los resultados se grafican en función de N, con el valor promedio escrito sobre cada punto y las barras de error con ± 1 desviación estándar.
+
+<img width="1145" height="884" alt="image" src="https://github.com/user-attachments/assets/817dabd8-de94-4ca0-a0d8-4fcadbe307d5" />
+
