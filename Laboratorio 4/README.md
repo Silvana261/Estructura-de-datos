@@ -197,6 +197,7 @@ En este archivo se hicieron las pruebas para verificar el funcionamiento del Qua
 
 ### Vecino más cercano 
 <img width="1200" height="1200" alt="image" src="https://github.com/user-attachments/assets/d83353fd-0fe8-4a77-ac8f-d663642ff140" />
+
 > [!NOTE]
 > Y se generó un punto aleatorio de consulta para el vecino más cercano.Entonces el punto de entrega más cercano desde el punto `(21337.75, 35693.37)` es el `(21209.17,    35738.52)` a una distancia de **136.28** metros.
 
