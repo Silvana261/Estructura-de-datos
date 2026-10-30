@@ -228,16 +228,17 @@ Para cada tamaño N se construyen árboles con puntos generados de forma uniform
 
 ### Interpretación:
 
-Con la distribución uniforme se generan árboles menos profundos que con la realista, porque la concentración de puntos en los barrios obliga a subdividir más veces para dejar un punto por hoja. 
+Con la distribución uniforme se generan árboles menos profundos que con la realista, porque la concentración de puntos en los barrios obliga a subdividir más veces para alojar los datos. Sin embargo, la diferencia no es muy grande, lo que demuestra que el Quadtree maneja bien ambas distribuciones.
 
-La profundidad promedio de un Quadtre es **log2(N)**, lo que representa una pendiente aproximadamente de **3.32**. Las pendientes medidas fueron 3,30 (uniforme) y 3,31 (realista), prácticamente iguales a la teórica.
+La profundidad máxima teórica de un Quadtree escala con **O(log_2(N))**, lo que en una escala logarítmica de base 10 representa una pendiente teórica de aproximadamente **3.32** Las pendientes empíricas obtenidas fueron de **3.30** (uniforme) y **3.31** (realista), valores prácticamente idénticos a los teóricos que validan el correcto rendimiento de la estructura. 
 
-### Gráficos 
+### Ejemplos de cómo se ve el árbol con las dos distribuciones
 
 <img width="1200" height="1200" alt="223b614e-98a1-4c98-95c6-9d765a9e0fcd" src="https://github.com/user-attachments/assets/a48f816b-f034-489f-b022-4ca25ff00d96" />
 
 
 <img width="1200" height="1200" alt="42548015-5f0d-460b-926a-f99d0c4924be" src="https://github.com/user-attachments/assets/4774fb34-ccdb-48be-965e-c44efac8e984" />
+
 
 ### `EXPERIMENTO 2: INSERCIÓN`
 
@@ -250,7 +251,7 @@ Para cada tamaño de N se generan puntos con distribución realista una sola vez
 
 En cuanto a la inserción, el quadtree es más lento que la lista en todos los N probados. La lista es mucho más eficiente a la hora de insertar.
 
-La pendiente fue **1.06** para la lista lo cual coincide con la teoría donde se espera una pendiente aproximadamente de **1**, ya que tiene un costo **O(N). 
+La pendiente fue **1.06** para la lista lo cual coincide con la teoría donde se espera una pendiente aproximadamente de **1**, ya que tiene un costo **O(N)**. 
 
 Y la pendiente para el quadtree fue de **1.14** lo cual coincide con la teoría donde se espera una pendiente aproximadamente de **1.1** para que sea **O(NlogN)**.
 
@@ -267,7 +268,7 @@ Para cada tamaño de N se generan puntos con distribución realista una sola vez
 En la búsqueda por radio, el más eficiente fue el quadtree.
 La fuerza bruta tiene una pendiente de **0.99** como se espera de un costo **O(N)**, porque recorre todos los puntos.  El quadtree obtuvo una pendiente de **0.38**,  que es cerca de lo que se esperaba para un costo de **O(log(N))**.
 
-En este caso, a partir de N = 20 puntos, el Quadtree es más rápido de que la lista. Y antes eran casi igual de rápidos.
+En este caso, a partir de **N = 20 puntos**, el Quadtree es más rápido de que la lista. Y antes eran casi igual de rápidos.
 
 Una posible causa de las desviaciones gigantes, es que como las consultas son puntos aleatorios, puede que hayan caído algunos en zonas muy pobladas, por lo que los puntos dentro del radio aumentaban mucho respecto a los que cayeron en puntos aislados.
 
@@ -282,39 +283,11 @@ Para cada tamaño de N se usan los mismos puntos y las mismas estructuras del ex
 
 ### Interpretación:
 
-En la búsqueda del vecino más cercano, al principio es más eficiente la lista para tamaños de N menores a 100 (pequeños), y partir de ahí el más eficiente es el quadtree, y la lista crece de manera lineal.
+En la búsqueda del vecino más cercano, al principio es más eficiente la lista para tamaños de N menores a 100 (pequeños), y partir de ahí el más eficiente es el quadtree, manteniendo un tiempo de consulta casi constante y la lista crece de manera lineal.
 
 La fuerza bruta tiene una pendiente log-log de **0.99**, como se espera de un costo **O(N)**, porque calcula la distancia a todos los puntos en cada consulta. 
 
 La pendiente del quadtree fue de **0.13**  que concuerda con el costo computacional de **O(log(N))**
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -325,5 +298,7 @@ La pendiente del quadtree fue de **0.13**  que concuerda con el costo computacio
 - Los tiempos dependen de la máquina y de Python (intérprete), por lo que importa la **tendencia** y las pendientes, no los valores absolutos.
 - En el quadtree el costo de una consulta depende de la **densidad local**, por eso la desviación entre consultas es grande: una consulta en un barrio denso devuelve muchos puntos, y una en una zona vacía casi ninguno.
 - La inserción en la lista (`append`) es casi gratuita, así que el quadtree no puede ganar ese experimento. Su costo de construcción se compensa en las consultas.
+
+
 
 
