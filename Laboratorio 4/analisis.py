@@ -1,3 +1,4 @@
+import gc
 import os
 import time
 import random
@@ -42,11 +43,14 @@ def construir_arbol(puntos):        # Toma el tiempo de construcción del árbol
     return raiz, time.perf_counter() - inicio     # Retorna el árbol y el tiempo
 
 def construir_lista(puntos):    # Fuerza bruta: "insertar" es agregar a una lista
-    inicio = time.perf_counter()   # Se inicia el contador de tiempo
-    lista = []                     # Se inicializa la estructura 
-    for x, y in puntos:            # Se inserta cada punto
-        lista.append((x, y))       
-    return lista, time.perf_counter() - inicio   # Retorna la lista y el tiempo
+    gc.disable()                        # sin recolector durante la medición
+    inicio = time.perf_counter()
+    lista = []
+    for x, y in puntos:
+        lista.append((x, y))
+    tiempo = time.perf_counter() - inicio
+    gc.enable()
+    return lista, tiempo
 
 
 # FUNCIONES PARA MEDIR LOS TIEMPOS
