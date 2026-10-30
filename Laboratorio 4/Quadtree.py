@@ -81,7 +81,8 @@ class Nodo_Quadtree:
             indice_nuevo = self.indice_hijo(coordenada_x_punto, coordenada_y_punto)  # Cuando se resuelve la inserción del punto antiguo, se calcula el índice del hijo al que pertenece el nuevo punto.
             return self.hijos[indice_nuevo].insertar_punto(coordenada_x_punto, coordenada_y_punto)   # Inserta el nuevo punto en ese hijo y se devuelve el resultado de la función
         else:
-            indice_punto_nuevo = self.indice_hijo(coordenada_x_punto, coordenada_y_punto)   # Si no es una hoja, se averigua en que hijo del nodo va
+            
+            indice_punto_nuevo = self.indice_hijo(coordenada_x_punto, coordenada_y_punto)   # Si no es una hoja, se averigua en que hijo del nodo va el punto y se intenta insertar
             return self.hijos[indice_punto_nuevo].insertar_punto(coordenada_x_punto, coordenada_y_punto)   
 
 
