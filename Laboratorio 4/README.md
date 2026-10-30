@@ -178,20 +178,28 @@ En este archivo se hicieron las pruebas para verificar el funcionamiento del Qua
    
       <img width="1200" height="1200" alt="image" src="https://github.com/user-attachments/assets/afb64d31-c780-440e-a29b-698fe69d79e3" />
 
-También se generó la gráfica para resolver la pregunta del problema:
+**Con el fin de analizar el comportamiento del Quadtree y resolver la pregunta del problema, se obtuvo la siguiente visualización:**
 
 
 ### Inserción
 <img width="1200" height="1200" alt="image" src="https://github.com/user-attachments/assets/72d81389-4c07-410c-a308-3ebdbe56428e" />
 
+> [!NOTE]
+> Aquí se puede ver una ciudad de 40.000 X 40.000 metros, con 10.000 puntos de entrega, donde se   concentran más en en unos puntos que en otros con la distribución realista.
+
 ### Búsqueda por radio
 <img width="1040" height="1137" alt="image" src="https://github.com/user-attachments/assets/0471620b-a3c1-4a83-9bc3-f479cb606b8e" />
-#### Se generó una búsqueda aleatoria para buscar los puntos a un radio de 500 metros
+
+> [!NOTE]
+> Se generó una búsqueda aleatoria para buscar los puntos a un radio de 500 metros.
+  Entonces desde el punto `(14191.9, 8701.51)` a un radio de 500 metros están los puntos de   entrega: `(13934.8, 8964.2)`, `(14291.4, 8502.5)`, `(14378.5, 8267.2)`, `(14490.6, 8672.1)`, `(14552.7, 8601.5)` .
+
 
 ### Vecino más cercano 
 <img width="1200" height="1200" alt="image" src="https://github.com/user-attachments/assets/d83353fd-0fe8-4a77-ac8f-d663642ff140" />
-#### Se generó la búsqueda del vecino más cercano aleatoriamente
 
+> [!NOTE]
+> Y se generó un punto aleatorio de consulta para el vecino más cercano.Entonces el punto de entrega más cercano desde el punto `(21337.75, 35693.37)` es el `(21209.17,    35738.52)` a una distancia de **136.28** metros.
 
 
 ## 4.  `analisis.py`
@@ -220,57 +228,66 @@ Para cada tamaño N se construyen árboles con puntos generados de forma uniform
 
 ### Interpretación:
 
-Con la distribución uniforme se generan árboles menos profundos que con la realista, porque la concentración de puntos en los barrios obliga a subdividir más veces para dejar un punto por hoja. 
+Con la distribución uniforme se generan árboles menos profundos que con la realista, porque la concentración de puntos en los barrios obliga a subdividir más veces para alojar los datos. Sin embargo, la diferencia no es muy grande, lo que demuestra que el Quadtree maneja bien ambas distribuciones.
 
-La profundidad promedio de un Quadtre es **log2(N)**, lo que representa una pendiente aproximadamente de **3.32**. Las pendientes medidas fueron 3,30 (uniforme) y 3,31 (realista), prácticamente iguales a la teórica.
+La profundidad máxima teórica de un Quadtree escala con **O(log_2(N))**, lo que en una escala logarítmica de base 10 representa una pendiente teórica de aproximadamente **3.32** Las pendientes empíricas obtenidas fueron de **3.30** (uniforme) y **3.31** (realista), valores prácticamente idénticos a los teóricos que validan el correcto rendimiento de la estructura. 
 
-### Gráficos 
+### Ejemplos de cómo se ve el árbol con las dos distribuciones
 
 <img width="1200" height="1200" alt="223b614e-98a1-4c98-95c6-9d765a9e0fcd" src="https://github.com/user-attachments/assets/a48f816b-f034-489f-b022-4ca25ff00d96" />
 
 
 <img width="1200" height="1200" alt="42548015-5f0d-460b-926a-f99d0c4924be" src="https://github.com/user-attachments/assets/4774fb34-ccdb-48be-965e-c44efac8e984" />
 
+
 ### `EXPERIMENTO 2: INSERCIÓN`
 
 Para cada tamaño de N se generan puntos con distribución realista una sola vez, y con esos mismos puntos se construyen las dos estructuras. Cada construcción se repite 50 veces, se mide el tiempo y se calcula el promedio y desviación estándar de las repeticiones. 
 
-<img width="1053" height="825" alt="image" src="https://github.com/user-attachments/assets/9d5c1419-0586-4e65-9ed2-fb88f176f68e" />
+<img width="1053" height="825" alt="image" src="https://github.com/user-attachments/assets/61b0dc9e-a6a7-436d-91e7-051f4cf4591e" />
+
 
 ### Interpretación:
 
-En cuanto a la inserción, el quadtree es más lento que la lista en todos los N probados. La lista es mucho más eficiente a la hora de insertar
+En cuanto a la inserción, el quadtree es más lento que la lista en todos los N probados. La lista es mucho más eficiente a la hora de insertar.
+
+La pendiente fue **1.06** para la lista lo cual coincide con la teoría donde se espera una pendiente aproximadamente de **1**, ya que tiene un costo **O(N)**. 
+
+Y la pendiente para el quadtree fue de **1.14** lo cual coincide con la teoría donde se espera una pendiente aproximadamente de **1.1** para que sea **O(NlogN)**.
 
 
+### `EXPERIMENTO 3: RADIO`
+
+Para cada tamaño de N se generan puntos con distribución realista una sola vez, y con ellos se construyen las dos estructuras. Luego, se generan 200 puntos de consulta y se buscan los puntos a un radio de 500 metros. Finalmente, se calcula el promedio y la desviación estándar de las 200 consultas de cada N.
+<img width="1053" height="825" alt="image" src="https://github.com/user-attachments/assets/18c96a68-60f9-4c37-a56a-afb7ba840a18" />
 
 
+### Interpretación:
 
 
+En la búsqueda por radio, el más eficiente fue el quadtree.
+La fuerza bruta tiene una pendiente de **0.99** como se espera de un costo **O(N)**, porque recorre todos los puntos.  El quadtree obtuvo una pendiente de **0.38**,  que es cerca de lo que se esperaba para un costo de **O(log(N))**.
+
+En este caso, a partir de **N = 20 puntos**, el Quadtree es más rápido de que la lista. Y antes eran casi igual de rápidos.
+
+Una posible causa de las desviaciones gigantes, es que como las consultas son puntos aleatorios, puede que hayan caído algunos en zonas muy pobladas, por lo que los puntos dentro del radio aumentaban mucho respecto a los que cayeron en puntos aislados.
 
 
+### `EXPERIMENTO 4: VECINO MÁS CERCANO`
+
+Para cada tamaño de N se usan los mismos puntos y las mismas estructuras del experimento anterior. Se utilizan los mismos 200 puntos de consultas aleatorias y en cada una se busca el vecino más cercano. Luego se promedia el tiempo que se demoraron las 200 consultas en cada N y se saca la desviación estándar 
 
 
+<img width="1053" height="823" alt="image" src="https://github.com/user-attachments/assets/7ab90fb8-67d9-461e-b85b-01149830f56a" />
 
 
+### Interpretación:
 
+En la búsqueda del vecino más cercano, al principio es más eficiente la lista para tamaños de N menores a 100 (pequeños), y partir de ahí el más eficiente es el quadtree, manteniendo un tiempo de consulta casi constante y la lista crece de manera lineal.
 
+La fuerza bruta tiene una pendiente log-log de **0.99**, como se espera de un costo **O(N)**, porque calcula la distancia a todos los puntos en cada consulta. 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+La pendiente del quadtree fue de **0.13**  que concuerda con el costo computacional de **O(log(N))**
 
 
 
@@ -281,5 +298,7 @@ En cuanto a la inserción, el quadtree es más lento que la lista en todos los N
 - Los tiempos dependen de la máquina y de Python (intérprete), por lo que importa la **tendencia** y las pendientes, no los valores absolutos.
 - En el quadtree el costo de una consulta depende de la **densidad local**, por eso la desviación entre consultas es grande: una consulta en un barrio denso devuelve muchos puntos, y una en una zona vacía casi ninguno.
 - La inserción en la lista (`append`) es casi gratuita, así que el quadtree no puede ganar ese experimento. Su costo de construcción se compensa en las consultas.
+
+
 
 
